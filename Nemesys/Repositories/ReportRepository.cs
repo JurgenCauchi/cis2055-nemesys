@@ -16,20 +16,15 @@ namespace Nemesys.Repositories
             _appDbContext = appDbContext;
         }
 
-        public void CreateBlogPost(ReportPost newBlogPost)
-        {
-            _appDbContext.ReportPost.Add(newBlogPost);
-            _appDbContext.SaveChanges();
-        }
-
         public void CreateReportPost(ReportPost newBlogPost)
         {
-            throw new NotImplementedException();
+            _appDbContext.ReportPosts.Add(newBlogPost);
+            _appDbContext.SaveChanges();
         }
 
         public IEnumerable<ReportPost> GetAllReportPosts()
         {
-            return _appDbContext.ReportPost
+            return _appDbContext.ReportPosts
                 .Include(x => x.Category)
                 .Include(x => x.User)
                 .OrderByDescending(x => x.CreatedDate).ToList();
@@ -37,12 +32,12 @@ namespace Nemesys.Repositories
 
         public IEnumerable<Category> GetAllCategories()
         {
-            return _appDbContext.Category;
+            return _appDbContext.Categories;
         }
 
         public ReportPost GetBlogPostById(int blogPostId)
         {
-            return _appDbContext.ReportPost
+            return _appDbContext.ReportPosts
                 .Include(x => x.Category)
                 .Include(x => x.User)
                 .FirstOrDefault(p => p.Id == blogPostId);
@@ -51,13 +46,13 @@ namespace Nemesys.Repositories
         public Category GetCategoryById(int categoryId)
         {
             //Not loading related blog posts
-            return _appDbContext.Category.FirstOrDefault(c => c.Id == categoryId);
+            return _appDbContext.Categories.FirstOrDefault(c => c.Id == categoryId);
 
         }
 
         public void UpdateBlogPost(ReportPost updatedBlogPost)
         {
-            var existingBlogPost = _appDbContext.ReportPost.SingleOrDefault(bp => bp.Id == updatedBlogPost.Id);
+            var existingBlogPost = _appDbContext.ReportPosts.SingleOrDefault(bp => bp.Id == updatedBlogPost.Id);
             if (existingBlogPost != null)
             {
                 existingBlogPost.Title = updatedBlogPost.Title;

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nemesys.Data;
 
@@ -11,9 +12,11 @@ using Nemesys.Data;
 namespace Nemesys.Migrations
 {
     [DbContext(typeof(NemesysContext))]
-    partial class NemesysContextModelSnapshot : ModelSnapshot
+    [Migration("20250429131948_Migration3")]
+    partial class Migration3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,26 +225,6 @@ namespace Nemesys.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "134c1566-3f64-4ab4-b1e7-2ffe11f43e32",
-                            AccessFailedCount = 0,
-                            AuthorAlias = "test",
-                            ConcurrencyStamp = "fd2ed7ec-6b31-4c6a-8fb3-46d892ad21d9",
-                            Email = "admin@mail.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@MAIL.COM",
-                            NormalizedUserName = "ADMIN@MAIL.COM ",
-                            PasswordHash = "AQAAAAIAAYagAAAAEP5xsWE39BRAj4jsqB9jWP23dDEzAEq8UJvSVzsl4Wk5S5JUKD115nEpnc4cgkYnpQ==",
-                            PhoneNumber = "",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "872d1448-a4f1-442b-bae3-8523c6ec4902",
-                            TwoFactorEnabled = false,
-                            UserName = "admin@mail.com"
-                        });
                 });
 
             modelBuilder.Entity("Nemesys.Models.Category", b =>
@@ -259,23 +242,6 @@ namespace Nemesys.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Uncategorised"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Comedy"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "News"
-                        });
                 });
 
             modelBuilder.Entity("Nemesys.Models.ReportPost", b =>

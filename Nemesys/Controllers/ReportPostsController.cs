@@ -75,7 +75,7 @@ namespace Nemesys.Controllers
                 return NotFound();
             }
 
-            var reportPost = await _context.ReportPost
+            var reportPost = await _context.ReportPosts
                 .Include(r => r.Category)
                 .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -173,7 +173,7 @@ namespace Nemesys.Controllers
                 return NotFound();
             }
 
-            var reportPost = await _context.ReportPost.FindAsync(id);
+            var reportPost = await _context.ReportPosts.FindAsync(id);
             if (reportPost == null)
             {
                 return NotFound();
@@ -228,7 +228,7 @@ namespace Nemesys.Controllers
                 return NotFound();
             }
 
-            var reportPost = await _context.ReportPost
+            var reportPost = await _context.ReportPosts
                 .Include(r => r.Category)
                 .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -245,10 +245,10 @@ namespace Nemesys.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var reportPost = await _context.ReportPost.FindAsync(id);
+            var reportPost = await _context.ReportPosts.FindAsync(id);
             if (reportPost != null)
             {
-                _context.ReportPost.Remove(reportPost);
+                _context.ReportPosts.Remove(reportPost);
             }
 
             await _context.SaveChangesAsync();
@@ -257,7 +257,7 @@ namespace Nemesys.Controllers
 
         private bool ReportPostExists(int id)
         {
-            return _context.ReportPost.Any(e => e.Id == id);
+            return _context.ReportPosts.Any(e => e.Id == id);
         }
     }
 }
