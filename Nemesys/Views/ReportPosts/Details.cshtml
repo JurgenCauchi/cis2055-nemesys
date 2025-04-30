@@ -23,10 +23,17 @@
 
 <a asp-controller="ReportPosts" asp-action="Index" class="btn btn-primary">Back to list</a>
 
+<!--- Drag the form in the if once authentication is made -->
+<form asp-controller="ReportPosts" asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline;">
+    <button type="submit" class="btn btn-danger" onclick="return confirm('You sure you wanna delete this report?');">Delete</button>
+</form>
+
+
 @if (User.Identity.IsAuthenticated)
 {
     if (Model.LoggedInUserId == Model.Author.Id)
     {
         <a asp-controller="ReportPosts" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Edit</a>
+        
     }
 }

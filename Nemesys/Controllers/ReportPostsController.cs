@@ -232,38 +232,12 @@ namespace Nemesys.Controllers
         }
 
         // GET: ReportPosts/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var reportPost = await _context.ReportPosts
-                .Include(r => r.Category)
-                .Include(r => r.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (reportPost == null)
-            {
-                return NotFound();
-            }
-
-            return View(reportPost);
-        }
-
-        // POST: ReportPosts/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult Delete(int id)
         {
-            var reportPost = await _context.ReportPosts.FindAsync(id);
-            if (reportPost != null)
-            {
-                _context.ReportPosts.Remove(reportPost);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            _reportRepository.DeleteReportPost(id);
+            return RedirectToAction("Index");
         }
 
         private bool ReportPostExists(int id)

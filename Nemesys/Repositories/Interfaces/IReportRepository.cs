@@ -14,5 +14,7 @@ namespace Nemesys.Repositories.Interfaces
 
         void UpdateReportPost(ReportPost updatedBlogPost);
 
+        void DeleteReportPost(int id);
+
     }
 }

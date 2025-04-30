@@ -66,6 +66,17 @@ namespace Nemesys.Repositories
 
         }
 
+        public void DeleteReportPost(int id)
+        {
+            var report = _appDbContext.ReportPosts.FirstOrDefault(r => r.Id == id);
+            if (report != null)
+            {
+                _appDbContext.ReportPosts.Remove(report);
+                _appDbContext.SaveChanges();
+            }
+        }
+
+
         /*public void UpdateReportPost(ReportPost updatedReportPost)
         {
             throw new NotImplementedException();
