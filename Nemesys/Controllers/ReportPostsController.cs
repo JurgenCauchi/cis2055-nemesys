@@ -176,60 +176,95 @@ namespace Nemesys.Controllers
             }
         }
 
-        // GET: ReportPosts/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int id)
         {
-            if (id == null)
+            var reportPost = _reportRepository.GetReportPostById(id);
+            if (reportPost != null)
             {
-                return NotFound();
+                var currentUserId = _userManager.GetUserId(User);
+                if (reportPost.UserId == currentUserId)
+                {
+                    var model = new EditReportPostViewModel
+                    {
+                        Id = reportPost.Id,
+                        Title = reportPost.Title,
+                        Content = reportPost.Content,
+                        ImageUrl = reportPost.ImageUrl,
+                        CategoryId = reportPost.CategoryId
+                    };
+
+                    // Load category list
+                    var categoryList = _reportRepository.GetAllCategories().Select(c => new CategoryViewModel
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    }).ToList();
+
+                    model.CategoryList = categoryList;
+
+                    return View(model);
+                }
+                else return Forbid();
             }
 
-            var reportPost = await _context.ReportPosts.FindAsync(id);
-            if (reportPost == null)
-            {
-                return NotFound();
-            }
-            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "Id", "Id", reportPost.CategoryId);
-            ViewData["UserId"] = new SelectList(_context.Set<AppUser>(), "Id", "Id", reportPost.UserId);
-            return View(reportPost);
+            return RedirectToAction("Index");
         }
 
-        // POST: ReportPosts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CreatedDate,Title,Content,ImageUrl,CategoryId,UpdatedDate,UserId")] ReportPost reportPost)
+        public IActionResult Edit(EditReportPostViewModel updatedReportPost)
         {
-            if (id != reportPost.Id)
+            if (updatedReportPost.CategoryId == 0)
             {
-                return NotFound();
+                ModelState.AddModelError("CategoryId", "Category is required");
             }
 
             if (ModelState.IsValid)
             {
-                try
+                string fileName = updatedReportPost.ImageUrl; // keep existing image by default
+
+                // If a new image is uploaded, process it
+                if (updatedReportPost.ImageToUpload != null)
                 {
-                    _context.Update(reportPost);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ReportPostExists(reportPost.Id))
+                    var extension = Path.GetExtension(updatedReportPost.ImageToUpload.FileName);
+                    fileName = "/images/reportposts/" + Guid.NewGuid().ToString() + extension;
+                    var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", fileName.TrimStart('/'));
+
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
+                        updatedReportPost.ImageToUpload.CopyTo(stream);
                     }
                 }
-                return RedirectToAction(nameof(Index));
+
+                var reportToUpdate = _reportRepository.GetReportPostById(updatedReportPost.Id);
+
+                if (reportToUpdate != null && reportToUpdate.UserId == _userManager.GetUserId(User))
+                {
+                    reportToUpdate.Title = updatedReportPost.Title;
+                    reportToUpdate.Content = updatedReportPost.Content;
+                    reportToUpdate.CategoryId = updatedReportPost.CategoryId;
+                    reportToUpdate.ImageUrl = fileName;
+                    reportToUpdate.UpdatedDate = DateTime.UtcNow;
+
+                    _context.SaveChanges(); // or _reportRepository.UpdateReportPost(reportToUpdate);
+
+                    return RedirectToAction("Details", new { id = reportToUpdate.Id });
+                }
+
+                return Forbid();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "Id", "Id", reportPost.CategoryId);
-            ViewData["UserId"] = new SelectList(_context.Set<AppUser>(), "Id", "Id", reportPost.UserId);
-            return View(reportPost);
+
+            // if validation fails, reattach categories
+            updatedReportPost.CategoryList = _reportRepository.GetAllCategories().Select(c => new CategoryViewModel
+            {
+                Id = c.Id,
+                Name = c.Name
+            }).ToList();
+
+            return View(updatedReportPost);
         }
+
+
 
         // GET: ReportPosts/Delete/5
         [HttpPost]
