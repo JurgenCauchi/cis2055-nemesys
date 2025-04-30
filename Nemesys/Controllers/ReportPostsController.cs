@@ -111,9 +111,9 @@ namespace Nemesys.Controllers
 
         [HttpPost]
         //[Authorize]
-        public IActionResult Create([Bind("Title, Content, ImageToUpload, CategoryId")] EditReportPostViewModel newBlogPost)
+        public IActionResult Create([Bind("Title, Content, ImageToUpload, CategoryId")] EditReportPostViewModel newReportPost)
         {
-            if (newBlogPost.CategoryId == 0)
+            if (newReportPost.CategoryId == 0)
             {
                 ModelState.AddModelError("CategoryId", "Category is required");
             }
@@ -121,31 +121,31 @@ namespace Nemesys.Controllers
             if (ModelState.IsValid)
             {
                 string fileName = "";
-                if (newBlogPost.ImageToUpload != null)
+                if (newReportPost.ImageToUpload != null)
                 {
                     //At this point you should check size, extension etc...
                     //Then persist using a new name for consistency (e.g. new Guid)
-                    var extension = "." + newBlogPost.ImageToUpload.FileName.Split('.')[newBlogPost.ImageToUpload.FileName.Split('.').Length - 1];
+                    var extension = "." + newReportPost.ImageToUpload.FileName.Split('.')[newReportPost.ImageToUpload.FileName.Split('.').Length - 1];
                     fileName = Guid.NewGuid().ToString() + extension;
-                    var path = Directory.GetCurrentDirectory() + "\\wwwroot\\images\\blogposts\\" + fileName;
+                    var path = Directory.GetCurrentDirectory() + "\\wwwroot\\images\\reportposts\\" + fileName;
                     using (var bits = new FileStream(path, FileMode.Create))
                     {
-                        newBlogPost.ImageToUpload.CopyTo(bits);
+                        newReportPost.ImageToUpload.CopyTo(bits);
                     }
                 }
 
-                ReportPost blogPost = new ReportPost()
+                ReportPost reportPost = new ReportPost()
                 {
-                    Title = newBlogPost.Title,
-                    Content = newBlogPost.Content,
+                    Title = newReportPost.Title,
+                    Content = newReportPost.Content,
                     CreatedDate = DateTime.UtcNow,
-                    ImageUrl = "/images/blogposts/" + fileName,
+                    ImageUrl = "/images/reportposts/" + fileName,
                     //ReadCount = 0,
-                    CategoryId = newBlogPost.CategoryId,
+                    CategoryId = newReportPost.CategoryId,
                     UserId = _userManager.GetUserId(User)
                 };
 
-                _reportRepository.CreateReportPost(blogPost);
+                _reportRepository.CreateReportPost(reportPost);
 
                 return RedirectToAction("Index");
             }
@@ -158,9 +158,9 @@ namespace Nemesys.Controllers
                 }).ToList();
 
                 //Re-attach to view model before sending back to the View (this is necessary so that the View can repopulate the drop down and pre-select according to the CategoryId
-                newBlogPost.CategoryList = categoryList;
+                newReportPost.CategoryList = categoryList;
 
-                return View(newBlogPost);
+                return View(newReportPost);
 
             }
         }
