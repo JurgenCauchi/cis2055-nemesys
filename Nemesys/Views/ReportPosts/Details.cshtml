@@ -1,60 +1,32 @@
-﻿@model Nemesys.Models.ReportPost
+﻿@using Nemesys.Models.ViewModels
+@model Nemesys.Models.ViewModels.ReportPostViewModel
+
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.Title;
 }
 
-<h1>Details</h1>
+<a asp-controller="ReportPosts" asp-action="Index" class="btn btn-outline-secondary">Back to list</a>
 
-<div>
-    <h4>ReportPost</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Content)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageUrl)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageUrl)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UpdatedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UpdatedDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Id)
-        </dd>
-    </dl>
+<h1>@Model.Title</h1>
+
+<div class="card" style="width: 90%; padding:20px; margin:20px;">
+    <img class="card-img-top" src="@Model.ImageUrl" alt="Image for @Model.Title" />
+    <div class="card-body">
+        <h3 class="card-title">@Model.Title</h3>
+        <p class="card-text">@Model.Content</p>
+        <p class="small">Category: @Model.Category.Name</p>
+        <p class="small">Reported on: @Model.CreatedDate.ToShortDateString()</p>
+        <p class="small">Reported by: @Model.Author.Name</p>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+<a asp-controller="ReportPosts" asp-action="Index" class="btn btn-primary">Back to list</a>
+
+@if (User.Identity.IsAuthenticated)
+{
+    if (Model.LoggedInUserId == Model.Author.Id)
+    {
+        <a asp-controller="ReportPosts" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Edit</a>
+    }
+}

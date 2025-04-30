@@ -16,9 +16,9 @@ namespace Nemesys.Repositories
             _appDbContext = appDbContext;
         }
 
-        public void CreateReportPost(ReportPost newBlogPost)
+        public void CreateReportPost(ReportPost newReportPost)
         {
-            _appDbContext.ReportPosts.Add(newBlogPost);
+            _appDbContext.ReportPosts.Add(newReportPost);
             _appDbContext.SaveChanges();
         }
 
@@ -35,12 +35,12 @@ namespace Nemesys.Repositories
             return _appDbContext.Categories;
         }
 
-        public ReportPost GetBlogPostById(int blogPostId)
+        public ReportPost GetReportPostById(int reportPostId)
         {
             return _appDbContext.ReportPosts
                 .Include(x => x.Category)
                 .Include(x => x.User)
-                .FirstOrDefault(p => p.Id == blogPostId);
+                .FirstOrDefault(p => p.Id == reportPostId);
         }
 
         public Category GetCategoryById(int categoryId)
@@ -50,25 +50,25 @@ namespace Nemesys.Repositories
 
         }
 
-        public void UpdateBlogPost(ReportPost updatedBlogPost)
+        public void UpdateReportPost(ReportPost updatedReportPost)
         {
-            var existingBlogPost = _appDbContext.ReportPosts.SingleOrDefault(bp => bp.Id == updatedBlogPost.Id);
+            var existingBlogPost = _appDbContext.ReportPosts.SingleOrDefault(bp => bp.Id == updatedReportPost.Id);
             if (existingBlogPost != null)
             {
-                existingBlogPost.Title = updatedBlogPost.Title;
-                existingBlogPost.Content = updatedBlogPost.Content;
-                existingBlogPost.UpdatedDate = updatedBlogPost.UpdatedDate;
-                existingBlogPost.ImageUrl = updatedBlogPost.ImageUrl;
-                existingBlogPost.CategoryId = updatedBlogPost.CategoryId;
+                existingBlogPost.Title = updatedReportPost.Title;
+                existingBlogPost.Content = updatedReportPost.Content;
+                existingBlogPost.UpdatedDate = updatedReportPost.UpdatedDate;
+                existingBlogPost.ImageUrl = updatedReportPost.ImageUrl;
+                existingBlogPost.CategoryId = updatedReportPost.CategoryId;
 
                 _appDbContext.SaveChanges();
             }
 
         }
 
-        public void UpdateReportPost(ReportPost updatedBlogPost)
+        /*public void UpdateReportPost(ReportPost updatedReportPost)
         {
             throw new NotImplementedException();
-        }
+        } */
     }
 }

@@ -5,7 +5,7 @@ namespace Nemesys.Repositories.Interfaces
     public interface IReportRepository
     {
         IEnumerable<ReportPost> GetAllReportPosts();
-        ReportPost GetBlogPostById(int blogPostId);
+        ReportPost GetReportPostById(int blogPostId);
 
         IEnumerable<Category> GetAllCategories();
         Category GetCategoryById(int categoryId);

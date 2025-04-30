@@ -68,24 +68,35 @@ namespace Nemesys.Controllers
         }
 
         // GET: ReportPosts/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var reportPost = await _context.ReportPosts
-                .Include(r => r.Category)
-                .Include(r => r.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var reportPost = _reportRepository.GetReportPostById(id);
             if (reportPost == null)
-            {
                 return NotFound();
-            }
 
-            return View(reportPost);
+            var model = new ReportPostViewModel()
+            {
+                Id = reportPost.Id,
+                CreatedDate = reportPost.CreatedDate,
+                ImageUrl = reportPost.ImageUrl,
+                Title = reportPost.Title,
+                Content = reportPost.Content,
+                Category = new CategoryViewModel()
+                {
+                    Id = reportPost.Category.Id,
+                    Name = reportPost.Category.Name
+                },
+                Author = new AuthorViewModel()
+                {
+                    Id = reportPost.UserId,
+                    Name = reportPost.User != null ? reportPost.User.UserName : "Anonymous"
+                },
+                LoggedInUserId = _userManager.GetUserId(User)
+            };
+
+            return View(model);
         }
+
 
         // GET: ReportPosts/Create
         [HttpGet]
