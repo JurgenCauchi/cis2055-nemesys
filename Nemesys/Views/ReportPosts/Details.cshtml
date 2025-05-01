@@ -1,9 +1,12 @@
 ﻿@using Nemesys.Models.ViewModels
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> UserManager
 @model Nemesys.Models.ViewModels.ReportPostViewModel
 
 
 @{
     ViewData["Title"] = Model.Title;
+    var currentUser = await UserManager.GetUserAsync(User);
 }
 
 <a asp-controller="ReportPosts" asp-action="Index" class="btn btn-outline-secondary">Back to list</a>
@@ -23,17 +26,23 @@
 
 <a asp-controller="ReportPosts" asp-action="Insdex" class="btn btn-primary">Back to list</a>
 
+@if (User.Identity.IsAuthenticated)
+{
+     if (Model.LoggedInUserId == Model.Author.Id && currentUser?.Role == "Reporter")
+    {
 <!--- Drag the form in the if once authentication is made -->
 <form asp-controller="ReportPosts" asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline;">
     <button type="submit" class="btn btn-danger" onclick="return confirm('You sure you wanna delete this report?');">Delete</button>
 </form>
+    }
+}
 
-<a asp-controller="ReportPosts" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Edit</a>
+
 
 @if (User.Identity.IsAuthenticated)
 {
-    if (Model.LoggedInUserId == Model.Author.Id)
+    if (Model.LoggedInUserId == Model.Author.Id && currentUser?.Role == "Reporter")
     {
-        
+        <a asp-controller="ReportPosts" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Edit</a>
     }
 }
