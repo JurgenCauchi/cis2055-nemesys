@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Nemesys.Data;
 using Nemesys.Repositories.Interfaces;
@@ -11,9 +11,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<NemesysContext>(options =>
    options.UseSqlServer(builder.Configuration.GetConnectionString("NemesysContext") ?? throw new InvalidOperationException("Connection string 'NemesysContext' not found.")));
 
-builder.Services.AddIdentity<AppUser, IdentityRole>()
-   .AddEntityFrameworkStores<NemesysContext>()
-   .AddDefaultTokenProviders(); // Fixed missing semicolon  
+builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<NemesysContext>();
+
+//builder.Services.AddIdentity<AppUser, IdentityRole>()
+//   .AddEntityFrameworkStores<NemesysContext>()
+//   .AddDefaultTokenProviders(); // Fixed missing semicolon  
 
 // Add services to the container.  
 builder.Services.AddControllersWithViews();
@@ -36,9 +38,12 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllerRoute(
    name: "default",
    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();
 
 app.Run();

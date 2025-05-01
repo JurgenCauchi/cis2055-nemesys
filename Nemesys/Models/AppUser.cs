@@ -7,5 +7,8 @@ namespace Nemesys.Models
         [PersonalData]
         public string AuthorAlias { get; set; }
 
+        public string Role { get; set; }
+
+
     }
 }

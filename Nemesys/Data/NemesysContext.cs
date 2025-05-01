@@ -26,9 +26,10 @@ namespace Nemesys.Data
                 NormalizedEmail = "ADMIN@MAIL.COM",
                 LockoutEnabled = false,
                 EmailConfirmed = true,
-                PhoneNumber = "",
+                PhoneNumber = "", 
                 ConcurrencyStamp = "fd2ed7ec-6b31-4c6a-8fb3-46d892ad21d9",
                 SecurityStamp = "872d1448-a4f1-442b-bae3-8523c6ec4902",
+                Role = "Investigator",
             };
             user.PasswordHash = "AQAAAAIAAYagAAAAEP5xsWE39BRAj4jsqB9jWP23dDEzAEq8UJvSVzsl4Wk5S5JUKD115nEpnc4cgkYnpQ==";
 
