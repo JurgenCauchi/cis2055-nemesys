@@ -11,5 +11,11 @@
         public CategoryViewModel Category { get; set; }
         public AuthorViewModel Author { get; set; }
         public string LoggedInUserId { get; set; }
+
+        public string Location { get; set; }
+
+        public HazardTypeViewModel HazardType { get; set; }
+
+        public ReportStatusViewModel ReportStatus { get; set; }
     }
 }

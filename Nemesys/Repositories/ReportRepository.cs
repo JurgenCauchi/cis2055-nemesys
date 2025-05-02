@@ -50,6 +50,29 @@ namespace Nemesys.Repositories
 
         }
 
+        public IEnumerable<HazardType> GetAllHazardTypes()
+        {
+            return _appDbContext.HazardTypes;
+        }
+
+        public HazardType GetHazardById(int hazardId)
+        {
+            //Not loading related blog posts
+            return _appDbContext.HazardTypes.FirstOrDefault(c => c.Id == hazardId);
+        }
+
+        public IEnumerable<ReportStatus> GetAllReportStatuses()
+        {
+            return _appDbContext.ReportStatuses;
+        }
+
+        public ReportStatus GetStatusById(int statusId)
+        {
+            //Not loading related blog posts
+            return _appDbContext.ReportStatuses.FirstOrDefault(c => c.Id == statusId);
+
+        }
+
         public void UpdateReportPost(ReportPost updatedReportPost)
         {
             var existingBlogPost = _appDbContext.ReportPosts.SingleOrDefault(bp => bp.Id == updatedReportPost.Id);

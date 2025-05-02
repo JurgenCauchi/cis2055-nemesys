@@ -56,10 +56,60 @@ namespace Nemesys.Data
                 }
             );
 
+
+            modelBuilder.Entity<HazardType>().HasData(
+                new HazardType()
+                {
+                    Id = 1,
+                    Name = "Unsafe Act"
+                },
+                new HazardType()
+                {
+                    Id = 2,
+                    Name = "Unsafe Condition"
+                },
+                new HazardType()
+                {
+                    Id = 3,
+                    Name = "Equipment Issue"
+                },
+                new HazardType()
+                {
+                    Id = 4,
+                    Name = "Unsafe Structure"
+                }
+            );
+
+            modelBuilder.Entity<ReportStatus>().HasData(
+                new ReportStatus()
+                {
+                    Id = 1,
+                    Name = "Open"
+                },
+                new ReportStatus()
+                {
+                    Id = 2,
+                    Name = "Being Investigated"
+                },
+                new ReportStatus()
+                {
+                    Id = 3,
+                    Name = "Investigation Complete"
+                },
+                new ReportStatus()
+                {
+                    Id = 4,
+                    Name = "Action Taken"
+                }
+            );
+
         }
 
         // DbSet properties should be public and virtual
-        public  DbSet<ReportPost> ReportPosts { get; set; } // Pluralized name convention
-        public  DbSet<Category> Categories { get; set; } // Changed to DbSet<T>
+        public  DbSet<ReportPost> ReportPosts { get; set; }
+        public  DbSet<Category> Categories { get; set; } 
+        public DbSet<HazardType> HazardTypes { get; set; }    
+        public DbSet<ReportStatus> ReportStatuses { get; set; } 
+        public DbSet<ReportUpvote> ReportUpvotes { get; set; }  
     }
 }
