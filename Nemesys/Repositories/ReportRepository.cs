@@ -27,6 +27,8 @@ namespace Nemesys.Repositories
             return _appDbContext.ReportPosts
                 .Include(x => x.Category)
                 .Include(x => x.User)
+                .Include(x => x.Hazard)
+                .Include(x => x.ReportStatus)
                 .OrderByDescending(x => x.CreatedDate).ToList();
         }
 
@@ -40,8 +42,11 @@ namespace Nemesys.Repositories
             return _appDbContext.ReportPosts
                 .Include(x => x.Category)
                 .Include(x => x.User)
+                .Include(x => x.Hazard) 
+                .Include(x => x.ReportStatus)
                 .FirstOrDefault(p => p.Id == reportPostId);
         }
+
 
         public Category GetCategoryById(int categoryId)
         {
@@ -83,6 +88,9 @@ namespace Nemesys.Repositories
                 existingBlogPost.UpdatedDate = updatedReportPost.UpdatedDate;
                 existingBlogPost.ImageUrl = updatedReportPost.ImageUrl;
                 existingBlogPost.CategoryId = updatedReportPost.CategoryId;
+                existingBlogPost.HazardTypeId = updatedReportPost.HazardTypeId;
+                existingBlogPost.ReportStatus = updatedReportPost.ReportStatus;
+                existingBlogPost.Location = updatedReportPost.Location;
 
                 _appDbContext.SaveChanges();
             }

@@ -17,23 +17,25 @@
     <img class="card-img-top" src="@Model.ImageUrl" alt="Image for @Model.Title" />
     <div class="card-body">
         <h3 class="card-title">@Model.Title</h3>
+        <p class="small">Location: @Model.Location</p>
         <p class="card-text">@Model.Content</p>
         <p class="small">Category: @Model.Category.Name</p>
+        <p class="small">Hazard Type: @Model.HazardType.Name</p>
+        <p class="small">Status: @Model.ReportStatus.Name</p>
         <p class="small">Reported on: @Model.CreatedDate.ToShortDateString()</p>
         <p class="small">Reported by: @Model.Author.Name</p>
     </div>
 </div>
 
-<a asp-controller="ReportPosts" asp-action="Insdex" class="btn btn-primary">Back to list</a>
+<a asp-controller="ReportPosts" asp-action="Index" class="btn btn-primary">Back to list</a>
 
 @if (User.Identity.IsAuthenticated)
 {
-     if (Model.LoggedInUserId == Model.Author.Id && currentUser?.Role == "Reporter")
+    if (Model.LoggedInUserId == Model.Author.Id && currentUser?.Role == "Reporter" || currentUser?.Role == "Investigator")
     {
-<!--- Drag the form in the if once authentication is made -->
-<form asp-controller="ReportPosts" asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline;">
-    <button type="submit" class="btn btn-danger" onclick="return confirm('You sure you wanna delete this report?');">Delete</button>
-</form>
+        <form asp-controller="ReportPosts" asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-danger" onclick="return confirm('You sure you wanna delete this report?');">Delete</button>
+        </form>
     }
 }
 
@@ -41,7 +43,7 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-    if (Model.LoggedInUserId == Model.Author.Id && currentUser?.Role == "Reporter")
+    if (Model.LoggedInUserId == Model.Author.Id && currentUser?.Role == "Reporter" || currentUser?.Role == "Investigator")
     {
         <a asp-controller="ReportPosts" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Edit</a>
     }

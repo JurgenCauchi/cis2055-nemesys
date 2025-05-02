@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Nemesys.Models.ViewModels
 {
@@ -30,10 +32,12 @@ namespace Nemesys.Models.ViewModels
         [Display(Name = "Hazard Type")]
         [Required(ErrorMessage = "Hazard Type is required")]
         public int HazardTypeId { get; set; }
+        [BindNever, ValidateNever]
         public List<HazardTypeViewModel> HazardTypeList { get; set; }
 
         [Display(Name = "Report Status")]
         public int ReportStatusId { get; set; }
+        [BindNever, ValidateNever]
         public List<ReportStatusViewModel> ReportStatusList { get; set; }
 
 
