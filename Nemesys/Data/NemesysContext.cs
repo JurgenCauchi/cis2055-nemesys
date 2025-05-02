@@ -103,6 +103,11 @@ namespace Nemesys.Data
                 }
             );
 
+            modelBuilder.Entity<ReportUpvote>()
+            .HasIndex(u => new { u.ReportPostId, u.UserId })
+            .IsUnique();
+
+
         }
 
         // DbSet properties should be public and virtual

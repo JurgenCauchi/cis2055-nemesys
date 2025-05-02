@@ -12,6 +12,10 @@
         public AuthorViewModel Author { get; set; }
         public string LoggedInUserId { get; set; }
 
+        public int UpvoteCount { get; set; }
+        public bool HasUpvoted { get; set; }
+
+
         public string Location { get; set; }
 
         public HazardTypeViewModel HazardType { get; set; }

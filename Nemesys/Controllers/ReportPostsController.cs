@@ -33,39 +33,80 @@ namespace Nemesys.Controllers
         // GET: ReportPosts
         public IActionResult Index()
         {
-            //var blogPosts = _reportRepository.GetAllReportPosts().OrderByDescending(b => b.CreatedDate);
+            var reportPosts = _reportRepository.GetAllReportPosts();
 
             var model = new ReportPostListViewModel()
             {
-                TotalEntries = _reportRepository.GetAllReportPosts().Count(),
-                ReportPosts = _reportRepository
-                .GetAllReportPosts()
-                .OrderByDescending(b => b.CreatedDate)
-                .Select(b => new ReportPostViewModel
-                {
-                    Id = b.Id,
-                    CreatedDate = b.CreatedDate,
-                    Content = b.Content,
-                    ImageUrl = b.ImageUrl,
-                    //ReadCount = b.ReadCount,
-                    Title = b.Title,
-                    Category = new CategoryViewModel()
+                TotalEntries = reportPosts.Count(),
+                ReportPosts = reportPosts
+                    .OrderByDescending(b => b.CreatedDate)
+                    .Select(b => new ReportPostViewModel
                     {
-                        Id = b.Category.Id,
-                        Name = b.Category.Name
-                    },
-                    Author = new AuthorViewModel()
-                    {
-                        Id = b.UserId,
-                        Name = b.User != null ? b.User.UserName : "Anonymous"
-                    }
-
-                })
+                        Id = b.Id,
+                        CreatedDate = b.CreatedDate,
+                        Content = b.Content,
+                        ImageUrl = b.ImageUrl,
+                        Title = b.Title,
+                        Location = b.Location,
+                        Category = new CategoryViewModel
+                        {
+                            Id = b.Category.Id,
+                            Name = b.Category.Name
+                        },
+                        HazardType = new HazardTypeViewModel
+                        {
+                            Id = b.Hazard.Id,
+                            Name = b.Hazard.Name
+                        },
+                        ReportStatus = new ReportStatusViewModel
+                        {
+                            Id = b.ReportStatus.Id,
+                            Name = b.ReportStatus.Name
+                        },
+                        Author = new AuthorViewModel
+                        {
+                            Id = b.UserId,
+                            Name = b.User != null ? b.User.UserName : "Anonymous"
+                        },
+                        UpvoteCount = _reportRepository.GetUpvoteCount(b.Id),
+                        LoggedInUserId = _userManager.GetUserId(User)
+                    }).ToList()
             };
 
             return View(model);
-
         }
+
+
+
+        [HttpPost]
+        public IActionResult ToggleUpvote(int reportPostId)
+        {
+            var userId = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var upvote = _context.ReportUpvotes
+                .FirstOrDefault(u => u.ReportPostId == reportPostId && u.UserId == userId);
+
+            if (upvote != null)
+            {
+                _context.ReportUpvotes.Remove(upvote);
+            }
+            else
+            {
+                _context.ReportUpvotes.Add(new ReportUpvote
+                {
+                    ReportPostId = reportPostId,
+                    UserId = userId
+                });
+            }
+
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+
+
 
         // GET: ReportPosts/Details/5
         public IActionResult Details(int id)
@@ -73,6 +114,8 @@ namespace Nemesys.Controllers
             var reportPost = _reportRepository.GetReportPostById(id);
             if (reportPost == null)
                 return NotFound();
+
+            var userId = _userManager.GetUserId(User); 
 
             var model = new ReportPostViewModel()
             {
@@ -102,11 +145,14 @@ namespace Nemesys.Controllers
                     Id = reportPost.UserId,
                     Name = reportPost.User != null ? reportPost.User.UserName : "Anonymous"
                 },
-                LoggedInUserId = _userManager.GetUserId(User)
+                UpvoteCount = _context.ReportUpvotes.Count(u => u.ReportPostId == id),
+                HasUpvoted = _context.ReportUpvotes.Any(u => u.ReportPostId == id && u.UserId == userId),
+                LoggedInUserId = userId
             };
 
             return View(model);
         }
+
 
 
         // GET: ReportPosts/Create

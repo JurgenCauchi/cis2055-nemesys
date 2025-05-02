@@ -9,15 +9,25 @@
 
 <h2>Showing @Model.TotalEntries blog entries</h2>
 <div class="row">
-    @foreach (var blogPost in Model.ReportPosts)
+    @foreach (var Report in Model.ReportPosts)
     {
         <div class="card" style="width: 18rem;padding:20px; margin:20px;">
-            <img class="card-img-top" src="@blogPost.ImageUrl" alt="Image for @blogPost.Title" />
+            <img class="card-img-top" src="@Report.ImageUrl" alt="Image for @Report.Title" />
             <div class="card-body">
-                <h3 class="card-title">@blogPost.Title</h3>
-                <p class="small">@blogPost.CreatedDate.ToShortDateString() in @blogPost.Category.Name by @blogPost.Author.Name</p>
+                <h3 class="card-title">@Report.Title</h3>
+                <p class="small">@Report.CreatedDate.ToShortDateString() in @Report.Category.Name by @Report.Author.Name</p>
 
-                <a asp-controller="ReportPosts" asp-action="Details" asp-route-id="@blogPost.Id" class="btn btn-primary">Details</a>
+                <a asp-controller="ReportPosts" asp-action="Details" asp-route-id="@Report.Id" class="btn btn-primary">Details</a>
+
+                <form asp-controller="ReportPosts" asp-action="ToggleUpvote" method="post">
+                    <input type="hidden" name="reportPostId" value="@Report.Id" />
+                    <input type="hidden" name="returnUrl" value="@Url.Action("Index", "ReportPosts")" />
+                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                        👍 @Report.UpvoteCount
+                    </button>
+                </form>
+
+
 
 
             </div>

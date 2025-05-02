@@ -48,3 +48,14 @@
         <a asp-controller="ReportPosts" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Edit</a>
     }
 }
+
+@if (User.Identity.IsAuthenticated)
+{
+    <form asp-controller="ReportPosts" asp-action="ToggleUpvote" asp-route-reportPostId="@Model.Id" method="post">
+        <input type="hidden" name="returnUrl" value="@Url.Action("Details", new { id = Model.Id })" />
+        <button type="submit" class="btn @(Model.HasUpvoted ? "btn-success" : "btn-outline-secondary")">
+            👍 @Model.UpvoteCount
+        </button>
+    </form>
+
+}

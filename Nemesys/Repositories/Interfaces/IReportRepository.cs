@@ -14,6 +14,10 @@ namespace Nemesys.Repositories.Interfaces
         IEnumerable<ReportStatus> GetAllReportStatuses();
         ReportStatus GetStatusById(int StatusId);
 
+        void UpvoteReport(int reportPostId, string userId);
+        bool HasUserUpvoted(int reportPostId, string userId);
+        public int GetUpvoteCount(int reportPostId);
+
         void CreateReportPost(ReportPost newBlogPost);
 
         void UpdateReportPost(ReportPost updatedBlogPost);

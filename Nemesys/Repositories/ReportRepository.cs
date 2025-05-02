@@ -78,6 +78,27 @@ namespace Nemesys.Repositories
 
         }
 
+        public bool HasUserUpvoted(int reportPostId, string userId)
+        {
+            return _appDbContext.ReportUpvotes.Any(u => u.ReportPostId == reportPostId && u.UserId == userId);
+        }
+
+        public void UpvoteReport(int reportPostId, string userId)
+        {
+            if (!HasUserUpvoted(reportPostId, userId))
+            {
+                var upvote = new ReportUpvote { ReportPostId = reportPostId, UserId = userId };
+                _appDbContext.ReportUpvotes.Add(upvote);
+                _appDbContext.SaveChanges();
+            }
+        }
+
+        public int GetUpvoteCount(int reportPostId)
+        {
+            return _appDbContext.ReportUpvotes.Count(u => u.ReportPostId == reportPostId);
+        }
+
+
         public void UpdateReportPost(ReportPost updatedReportPost)
         {
             var existingBlogPost = _appDbContext.ReportPosts.SingleOrDefault(bp => bp.Id == updatedReportPost.Id);
