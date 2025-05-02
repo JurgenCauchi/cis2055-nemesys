@@ -267,7 +267,7 @@ namespace Nemesys.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
 
                     b.HasData(
                         new
@@ -325,7 +325,7 @@ namespace Nemesys.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ReportPosts");
+                    b.ToTable("ReportPosts", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

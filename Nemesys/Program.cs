@@ -6,12 +6,13 @@ using Nemesys.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Nemesys.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore; // For IdentityDbContext
+using IEmailSender = Microsoft.AspNetCore.Identity.UI.Services.IEmailSender;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<NemesysContext>(options =>
    options.UseSqlServer(builder.Configuration.GetConnectionString("NemesysContext") ?? throw new InvalidOperationException("Connection string 'NemesysContext' not found.")));
 
-builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<NemesysContext>();
+builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<NemesysContext>().AddDefaultTokenProviders();
 
 //builder.Services.AddIdentity<AppUser, IdentityRole>()
 //   .AddEntityFrameworkStores<NemesysContext>()
@@ -21,6 +22,13 @@ builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireCo
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
+
+// Bind configuration to AuthMessageSenderOptions
+builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration.GetSection("Email:Smtp"));
+
+// Register the email sender
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+
 
 var app = builder.Build();
 
@@ -36,6 +44,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
 
 app.UseAuthorization();
 app.UseAuthentication();
