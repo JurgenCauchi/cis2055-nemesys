@@ -81,10 +81,21 @@ namespace Nemesys.Controllers
                 ImageUrl = reportPost.ImageUrl,
                 Title = reportPost.Title,
                 Content = reportPost.Content,
+                Location = reportPost.Location,
                 Category = new CategoryViewModel()
                 {
                     Id = reportPost.Category.Id,
                     Name = reportPost.Category.Name
+                },
+                HazardType = new HazardTypeViewModel()
+                {
+                    Id = reportPost.Hazard.Id,
+                    Name = reportPost.Hazard.Name
+                },
+                ReportStatus = new ReportStatusViewModel()
+                {
+                    Id = reportPost.ReportStatus.Id,
+                    Name = reportPost.ReportStatus.Name
                 },
                 Author = new AuthorViewModel()
                 {
@@ -110,10 +121,27 @@ namespace Nemesys.Controllers
                 Name = c.Name
             }).ToList();
 
+            var hazardList = _reportRepository.GetAllHazardTypes().Select(c => new HazardTypeViewModel()
+            {
+                Id = c.Id,
+                Name = c.Name
+            }).ToList();
+
+            var statusList = _reportRepository.GetAllReportStatuses().Select(c => new ReportStatusViewModel()
+            {
+                Id = c.Id,
+                Name = c.Name
+            }).ToList();
+
+
             //Pass the list into an EditBlogPostViewModel, which is used by the View (all other properties may be left blank, unless you want to add other default values
             var model = new EditReportPostViewModel()
             {
-                CategoryList = categoryList
+                CategoryList = categoryList,
+                HazardTypeList = hazardList,
+                ReportStatusList = statusList,
+                ReportStatusId = 1,
+
             };
 
             //Pass model to View
@@ -122,11 +150,20 @@ namespace Nemesys.Controllers
 
         [HttpPost]
         //[Authorize]
-        public IActionResult Create([Bind("Title, Content, ImageToUpload, CategoryId")] EditReportPostViewModel newReportPost)
+        public IActionResult Create([Bind("Title, Content, ImageToUpload, CategoryId, Location, HazardTypeId, ReportStatusId")] EditReportPostViewModel newReportPost)
+
         {
             if (newReportPost.CategoryId == 0)
             {
                 ModelState.AddModelError("CategoryId", "Category is required");
+            }
+            if (newReportPost.HazardTypeId == 0)
+            {
+                ModelState.AddModelError("HazardTypeId", "Hazard type is required");
+            }
+            if (newReportPost.ReportStatusId == 0)
+            {
+                ModelState.AddModelError("ReportStatusId", "Status is required");
             }
 
             if (ModelState.IsValid)
@@ -153,7 +190,11 @@ namespace Nemesys.Controllers
                     ImageUrl = "/images/reportposts/" + fileName,
                     //ReadCount = 0,
                     CategoryId = newReportPost.CategoryId,
-                    UserId = _userManager.GetUserId(User)
+                    UserId = _userManager.GetUserId(User),
+                    HazardTypeId = newReportPost.HazardTypeId,
+                    ReportStatusId = newReportPost.ReportStatusId,
+                    Location = newReportPost.Location
+
                 };
 
                 _reportRepository.CreateReportPost(reportPost);
@@ -162,18 +203,27 @@ namespace Nemesys.Controllers
             }
             else
             {
-                var categoryList = _reportRepository.GetAllCategories().Select(c => new CategoryViewModel()
+                newReportPost.CategoryList = _reportRepository.GetAllCategories().Select(c => new CategoryViewModel
                 {
                     Id = c.Id,
                     Name = c.Name
                 }).ToList();
 
-                //Re-attach to view model before sending back to the View (this is necessary so that the View can repopulate the drop down and pre-select according to the CategoryId
-                newReportPost.CategoryList = categoryList;
+                newReportPost.HazardTypeList = _reportRepository.GetAllHazardTypes().Select(h => new HazardTypeViewModel
+                {
+                    Id = h.Id,
+                    Name = h.Name
+                }).ToList();
+
+                newReportPost.ReportStatusList = _reportRepository.GetAllReportStatuses().Select(s => new ReportStatusViewModel
+                {
+                    Id = s.Id,
+                    Name = s.Name
+                }).ToList();
 
                 return View(newReportPost);
-
             }
+
         }
 
         public IActionResult Edit(int id)
@@ -190,7 +240,10 @@ namespace Nemesys.Controllers
                         Title = reportPost.Title,
                         Content = reportPost.Content,
                         ImageUrl = reportPost.ImageUrl,
-                        CategoryId = reportPost.CategoryId
+                        CategoryId = reportPost.CategoryId,
+                        Location = reportPost.Location,
+                        HazardTypeId = reportPost.HazardTypeId,
+                        ReportStatusId = reportPost.ReportStatusId
                     };
 
                     // Load category list
@@ -200,7 +253,21 @@ namespace Nemesys.Controllers
                         Name = c.Name
                     }).ToList();
 
+                    var hazardList = _reportRepository.GetAllHazardTypes().Select(c => new HazardTypeViewModel()
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    }).ToList();
+
+                    var statusList = _reportRepository.GetAllReportStatuses().Select(c => new ReportStatusViewModel()
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    }).ToList();
+
                     model.CategoryList = categoryList;
+                    model.HazardTypeList = hazardList;
+                    model.ReportStatusList = statusList;
 
                     return View(model);
                 }
@@ -217,6 +284,14 @@ namespace Nemesys.Controllers
             if (updatedReportPost.CategoryId == 0)
             {
                 ModelState.AddModelError("CategoryId", "Category is required");
+            }
+            if (updatedReportPost.HazardTypeId == 0)
+            {
+                ModelState.AddModelError("HazardTypeId", "Hazard type is required");
+            }
+            if (updatedReportPost.ReportStatusId == 0)
+            {
+                ModelState.AddModelError("ReportStatusId", "Status is required");
             }
 
             if (ModelState.IsValid)
@@ -245,6 +320,10 @@ namespace Nemesys.Controllers
                     reportToUpdate.CategoryId = updatedReportPost.CategoryId;
                     reportToUpdate.ImageUrl = fileName;
                     reportToUpdate.UpdatedDate = DateTime.UtcNow;
+                    reportToUpdate.Location = updatedReportPost.Location;
+                    reportToUpdate.HazardTypeId = updatedReportPost.HazardTypeId;
+                    reportToUpdate.ReportStatusId = updatedReportPost.ReportStatusId;
+
 
                     _context.SaveChanges(); // or _reportRepository.UpdateReportPost(reportToUpdate);
 

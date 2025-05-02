@@ -11,7 +11,6 @@ namespace Nemesys.Models.ViewModels
 
         public string Title { get; set; }
         [Display(Name = "Blog Post Category")]
-        //Property used to bind user selection.
         [Required(ErrorMessage = "Category is required")]
 
         public int CategoryId { get; set; }
@@ -24,6 +23,19 @@ namespace Nemesys.Models.ViewModels
         public string? ImageUrl { get; set; } //Used to prepare the edit page
         [Display(Name = "Featured Image")]
         public IFormFile? ImageToUpload { get; set; } //used only when submitting form
+
+        [Required(ErrorMessage = "Location is required")]
+        public string Location { get; set; }
+
+        [Display(Name = "Hazard Type")]
+        [Required(ErrorMessage = "Hazard Type is required")]
+        public int HazardTypeId { get; set; }
+        public List<HazardTypeViewModel> HazardTypeList { get; set; }
+
+        [Display(Name = "Report Status")]
+        public int ReportStatusId { get; set; }
+        public List<ReportStatusViewModel> ReportStatusList { get; set; }
+
 
     }
 }

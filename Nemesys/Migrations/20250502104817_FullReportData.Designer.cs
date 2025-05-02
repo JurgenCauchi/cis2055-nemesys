@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nemesys.Data;
 
@@ -11,9 +12,11 @@ using Nemesys.Data;
 namespace Nemesys.Migrations
 {
     [DbContext(typeof(NemesysContext))]
-    partial class NemesysContextModelSnapshot : ModelSnapshot
+    [Migration("20250502104817_FullReportData")]
+    partial class FullReportData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -267,7 +270,7 @@ namespace Nemesys.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -378,7 +381,7 @@ namespace Nemesys.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ReportPosts", (string)null);
+                    b.ToTable("ReportPosts");
                 });
 
             modelBuilder.Entity("Nemesys.Models.ReportStatus", b =>

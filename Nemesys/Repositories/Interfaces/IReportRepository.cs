@@ -9,6 +9,10 @@ namespace Nemesys.Repositories.Interfaces
 
         IEnumerable<Category> GetAllCategories();
         Category GetCategoryById(int categoryId);
+        IEnumerable<HazardType> GetAllHazardTypes();
+        HazardType GetHazardById(int hazardId);
+        IEnumerable<ReportStatus> GetAllReportStatuses();
+        ReportStatus GetStatusById(int StatusId);
 
         void CreateReportPost(ReportPost newBlogPost);
 
