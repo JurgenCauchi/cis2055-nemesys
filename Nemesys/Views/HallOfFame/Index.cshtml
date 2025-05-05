@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Nemesys.Models.ViewModels.ReporterRankingViewModel>
+
+<h2>Report Hall of Fame</h2>
+<table class ="table table-bordered">
+	<thread>
+		<tr>
+			<th>Rank</th>
+			<th>Alias</th>
+			<th>Email</th>
+			<th>Reports Submitted</th>
+		</tr>
+	</thread>
+	<tbody>
+		@if (!Model.Any())
+		{
+			<tr>
+				<td colspan="4">No reports submitted this year </td>
+			</tr>
+		}
+		else
+		{
+			var rank = 1;
+			foreach(var reporter in Model)
+			{
+				<tr>
+					<td>@rank</td>
+					<td>@reporter.ReporterAlias</td>
+					<td>@reporter.ReporterEmail</td>
+					<td>@reporter.ReportCount</td>
+				</tr>
+				rank++;
+			}
+		}
+	</tbody>
+	</table>

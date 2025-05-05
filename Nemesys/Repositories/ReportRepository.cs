@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Nemesys.Models;
 using System;
 using Nemesys.Data;
+using Nemesys.Models.ViewModels;
 
 namespace Nemesys.Repositories
 {
@@ -93,6 +94,21 @@ namespace Nemesys.Repositories
             }
         }
 
+        public IEnumerable<ReporterRankingViewModel> GetReporterRankings(int year)
+        {
+            return _appDbContext.ReportPosts
+                .Include(r => r.User)
+                .Where(r => r.CreatedDate.Year == year && r.User != null)
+                .GroupBy(r => new { r.User.Email, r.User.AuthorAlias })
+                .Select(g => new ReporterRankingViewModel
+                {
+                    ReporterEmail = g.Key.Email,
+                    ReporterAlias = g.Key.AuthorAlias,
+                    ReportCount = g.Count()
+                })
+                .OrderByDescending(r => r.ReportCount)
+                .ToList();
+        }
         public int GetUpvoteCount(int reportPostId)
         {
             return _appDbContext.ReportUpvotes.Count(u => u.ReportPostId == reportPostId);

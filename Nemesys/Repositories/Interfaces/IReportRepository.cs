@@ -1,4 +1,5 @@
 ﻿using Nemesys.Models;
+using Nemesys.Models.ViewModels;
 
 namespace Nemesys.Repositories.Interfaces
 {
@@ -17,6 +18,8 @@ namespace Nemesys.Repositories.Interfaces
         void UpvoteReport(int reportPostId, string userId);
         bool HasUserUpvoted(int reportPostId, string userId);
         public int GetUpvoteCount(int reportPostId);
+
+        public IEnumerable<ReporterRankingViewModel> GetReporterRankings(int year);
 
         void CreateReportPost(ReportPost newBlogPost);
 
