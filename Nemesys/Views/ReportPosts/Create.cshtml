@@ -44,16 +44,6 @@
         <span asp-validation-for="HazardTypeId" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ReportStatusId" class="col-md-2"></label>
-        <div class="col-md-5">
-            <select asp-for="ReportStatusId"
-                    asp-items="@(new SelectList(Model.ReportStatusList,"Id","Name"))">
-            </select>
-        </div>
-        <span asp-validation-for="ReportStatusId" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
         <label asp-for="Content" class="col-md-2"></label>
         <div class="col-md-5">
             <textarea asp-for="Content" class="form-control"></textarea>

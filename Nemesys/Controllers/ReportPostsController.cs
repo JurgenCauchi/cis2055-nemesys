@@ -102,7 +102,8 @@ namespace Nemesys.Controllers
             }
 
             _context.SaveChanges();
-            return RedirectToAction("Index");
+            return Redirect(Request.Headers["Referer"].ToString()); //Refreshes screen
+
         }
 
 
@@ -207,10 +208,10 @@ namespace Nemesys.Controllers
             {
                 ModelState.AddModelError("HazardTypeId", "Hazard type is required");
             }
-            if (newReportPost.ReportStatusId == 0)
-            {
-                ModelState.AddModelError("ReportStatusId", "Status is required");
-            }
+            //if (newReportPost.ReportStatusId == 0)
+            //{
+            //    ModelState.AddModelError("ReportStatusId", "Status is required");
+            //}
 
             if (ModelState.IsValid)
             {
@@ -238,7 +239,8 @@ namespace Nemesys.Controllers
                     CategoryId = newReportPost.CategoryId,
                     UserId = _userManager.GetUserId(User),
                     HazardTypeId = newReportPost.HazardTypeId,
-                    ReportStatusId = newReportPost.ReportStatusId,
+                    //ReportStatusId = newReportPost.ReportStatusId,
+                    ReportStatusId = 1,
                     Location = newReportPost.Location
 
                 };
@@ -289,7 +291,8 @@ namespace Nemesys.Controllers
                         CategoryId = reportPost.CategoryId,
                         Location = reportPost.Location,
                         HazardTypeId = reportPost.HazardTypeId,
-                        ReportStatusId = reportPost.ReportStatusId
+                        //ReportStatusId = reportPost.ReportStatusId
+                        ReportStatusId = 1
                     };
 
                     // Load category list

@@ -33,12 +33,12 @@ namespace Nemesys.Models.ViewModels
         [Required(ErrorMessage = "Hazard Type is required")]
         public int HazardTypeId { get; set; }
         [BindNever, ValidateNever]
-        public List<HazardTypeViewModel> HazardTypeList { get; set; }
+        public List<HazardTypeViewModel>? HazardTypeList { get; set; }
 
         [Display(Name = "Report Status")]
         public int ReportStatusId { get; set; }
         [BindNever, ValidateNever]
-        public List<ReportStatusViewModel> ReportStatusList { get; set; }
+        public List<ReportStatusViewModel>? ReportStatusList { get; set; }
 
 
     }
