@@ -12,7 +12,10 @@
     @foreach (var Report in Model.ReportPosts)
     {
         <div class="card" style="width: 18rem;padding:20px; margin:20px;">
-            <img class="card-img-top" src="@Report.ImageUrl" alt="Image for @Report.Title" />
+            @if (!string.IsNullOrEmpty(Report.ImageUrl))
+            {
+                <img class="card-img-top" src="@Report.ImageUrl" alt="Image for @Report.Title" />
+            }
             <div class="card-body">
                 <h3 class="card-title">@Report.Title</h3>
                 <p class="small">@Report.CreatedDate.ToShortDateString() in @Report.Category.Name by @Report.Author.Name</p>

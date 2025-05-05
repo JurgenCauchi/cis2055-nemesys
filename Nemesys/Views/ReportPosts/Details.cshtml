@@ -9,6 +9,30 @@
     var currentUser = await UserManager.GetUserAsync(User);
 }
 
+@section Scripts{
+    <script>
+        // Your map initialization code here
+        function initMap() {
+            const coords = '@Model.Location';
+
+            if (coords && coords.includes(',')) {
+                const [lat, lng] = coords.split(',').map(Number);
+                const postMap = L.map('post-map').setView([lat, lng], 13);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(postMap);
+                L.marker([lat, lng]).addTo(postMap)
+                    .bindPopup("Selected Location").openPopup();
+            } else {
+                document.getElementById('post-map').style.display = 'none';
+                document.querySelector('.small').textContent = 'No location data available';
+            }
+        }
+
+        // Call the function when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', initMap);
+    </script>
+}
+
 <a asp-controller="ReportPosts" asp-action="Index" class="btn btn-outline-secondary">Back to list</a>
 
 <h1>@Model.Title</h1>
@@ -17,13 +41,15 @@
     <img class="card-img-top" src="@Model.ImageUrl" alt="Image for @Model.Title" />
     <div class="card-body">
         <h3 class="card-title">@Model.Title</h3>
-        <p class="small">Location: @Model.Location</p>
         <p class="card-text">@Model.Content</p>
         <p class="small">Category: @Model.Category.Name</p>
         <p class="small">Hazard Type: @Model.HazardType.Name</p>
         <p class="small">Status: @Model.ReportStatus.Name</p>
         <p class="small">Reported on: @Model.CreatedDate.ToShortDateString()</p>
         <p class="small">Reported by: @Model.Author.Name</p>
+        <div style="margin-bottom: 20px;">
+            <div id="post-map" style="height: 400px; margin-bottom: 10px;"></div>
+        </div>
     </div>
 </div>
 

@@ -10,8 +10,38 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        // Default map center (e.g. city center or user IP location)
+        const defaultLat = 35.902291;
+        const defaultLng = 14.483666;
+
+        const map = L.map('map').setView([defaultLat, defaultLng], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        let marker;
+
+        map.on('click', function (e) {
+            const lat = e.latlng.lat.toFixed(6);
+            const lng = e.latlng.lng.toFixed(6);
+
+            if (marker) {
+                marker.setLatLng(e.latlng);
+            } else {
+                marker = L.marker(e.latlng).addTo(map);
+            }
+
+            document.getElementById('Location').value = `${lat},${lng}`;
+        });
+    </script>
+
 }
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 
 <h2>Create Blog Post</h2>
 
@@ -54,7 +84,8 @@
     <div class="form-group">
         <label asp-for="Location" class="col-md-2"></label>
         <div class="col-md-5">
-            <textarea asp-for="Location" class="form-control"></textarea>
+            <div id="map" style="height: 400px;"></div>
+            <input type="hidden" asp-for="Location" id="Location" />
             <span asp-validation-for="Location" class="text-danger"></span>
         </div>
     </div>

@@ -18,6 +18,8 @@ namespace Nemesys.Controllers
     public class ReportPostsController : Controller
     {
         private IReportRepository _reportRepository { get; set; }
+        public string ImageUrl { get; private set; }
+
         private readonly NemesysContext _context;
         private readonly UserManager<AppUser> _userManager;
 
@@ -229,21 +231,30 @@ namespace Nemesys.Controllers
                     }
                 }
 
-                ReportPost reportPost = new ReportPost()
+                if(fileName.Length > 0)
                 {
-                    Title = newReportPost.Title,
-                    Content = newReportPost.Content,
-                    CreatedDate = DateTime.UtcNow,
-                    ImageUrl = "/images/reportposts/" + fileName,
-                    //ReadCount = 0,
-                    CategoryId = newReportPost.CategoryId,
-                    UserId = _userManager.GetUserId(User),
-                    HazardTypeId = newReportPost.HazardTypeId,
-                    //ReportStatusId = newReportPost.ReportStatusId,
-                    ReportStatusId = 1,
-                    Location = newReportPost.Location
+                    ImageUrl = "/images/reportposts/" + fileName;
+                }
+                else
+                {
+                    ImageUrl = "";
+                }
 
-                };
+                    ReportPost reportPost = new ReportPost()
+                    {
+                        Title = newReportPost.Title,
+                        Content = newReportPost.Content,
+                        CreatedDate = DateTime.UtcNow,
+                        ImageUrl = ImageUrl,
+                        //ReadCount = 0,
+                        CategoryId = newReportPost.CategoryId,
+                        UserId = _userManager.GetUserId(User),
+                        HazardTypeId = newReportPost.HazardTypeId,
+                        //ReportStatusId = newReportPost.ReportStatusId,
+                        ReportStatusId = 1,
+                        Location = newReportPost.Location
+
+                    };
 
                 _reportRepository.CreateReportPost(reportPost);
 

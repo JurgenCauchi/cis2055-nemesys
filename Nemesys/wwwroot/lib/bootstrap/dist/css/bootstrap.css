@@ -2966,6 +2966,7 @@ textarea.form-control-lg {
   color: #fff;
   background-color: #0d6efd;
   border-color: #0d6efd;
+  margin-top: auto;
 }
 .btn-primary:hover {
   color: #fff;
@@ -3230,6 +3231,7 @@ textarea.form-control-lg {
 .btn-outline-secondary {
   color: #6c757d;
   border-color: #6c757d;
+  margin-top: 0.35em;
 }
 .btn-outline-secondary:hover {
   color: #fff;
@@ -3424,6 +3426,7 @@ textarea.form-control-lg {
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
   border-radius: 0.2rem;
+  margin-top: 0.5rem;
 }
 
 .fade {
