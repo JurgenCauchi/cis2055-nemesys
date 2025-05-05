@@ -5,6 +5,6 @@
         public int Id { get; set; }
         public String Name { get; set; }
 
-        public List<ReportPost> ReportPosts { get; set; }
+        public List<Investigation> ReportPosts { get; set; }
     }
 }

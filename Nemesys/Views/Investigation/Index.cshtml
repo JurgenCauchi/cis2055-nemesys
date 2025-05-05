@@ -1,0 +1,26 @@
+﻿@using Nemesys.Models
+@using Nemesys.Models.ViewModels
+@model InvestigationListViewModel
+@inject SignInManager<AppUser> SignInManager
+@{
+    ViewData["Title"] = "Investigations";
+}
+<h1>@ViewData["Title"]</h1>
+
+<h2>Showing @Model.TotalEntries Investigations</h2>
+<div class="row">
+    @foreach (var Investigation in Model.Investigations)
+    {
+        <div class="card" style="width: 18rem;padding:20px; margin:20px;">
+            <div class="card-body">
+                <h3 class="card-title">Investigation for: @Investigation.Report.Title</h3>
+                <p class="small">@Investigation.CreatedDate.ToShortDateString() by @Investigation.Author.Name</p>
+
+                <a asp-controller="Investigation" asp-action="Details" asp-route-id="@Investigation.Id" class="btn btn-primary">Details</a>
+
+            </div>
+        </div>
+    }
+
+</div>
+

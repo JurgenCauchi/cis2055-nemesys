@@ -46,7 +46,7 @@ namespace Nemesys.Controllers
                     {
                         Id = b.Id,
                         CreatedDate = b.CreatedDate,
-                        Content = b.Content,
+                        Description = b.Content,
                         ImageUrl = b.ImageUrl,
                         Title = b.Title,
                         Location = b.Location,
@@ -118,7 +118,7 @@ namespace Nemesys.Controllers
             if (reportPost == null)
                 return NotFound();
 
-            var userId = _userManager.GetUserId(User); 
+            var userId = _userManager.GetUserId(User);
 
             var model = new ReportPostViewModel()
             {
@@ -126,7 +126,7 @@ namespace Nemesys.Controllers
                 CreatedDate = reportPost.CreatedDate,
                 ImageUrl = reportPost.ImageUrl,
                 Title = reportPost.Title,
-                Content = reportPost.Content,
+                Description = reportPost.Content,
                 Location = reportPost.Location,
                 Category = new CategoryViewModel()
                 {
@@ -231,7 +231,7 @@ namespace Nemesys.Controllers
                     }
                 }
 
-                if(fileName.Length > 0)
+                if (fileName.Length > 0)
                 {
                     ImageUrl = "/images/reportposts/" + fileName;
                 }
@@ -240,21 +240,21 @@ namespace Nemesys.Controllers
                     ImageUrl = "";
                 }
 
-                    ReportPost reportPost = new ReportPost()
-                    {
-                        Title = newReportPost.Title,
-                        Content = newReportPost.Content,
-                        CreatedDate = DateTime.UtcNow,
-                        ImageUrl = ImageUrl,
-                        //ReadCount = 0,
-                        CategoryId = newReportPost.CategoryId,
-                        UserId = _userManager.GetUserId(User),
-                        HazardTypeId = newReportPost.HazardTypeId,
-                        //ReportStatusId = newReportPost.ReportStatusId,
-                        ReportStatusId = 1,
-                        Location = newReportPost.Location
+                ReportPost reportPost = new ReportPost()
+                {
+                    Title = newReportPost.Title,
+                    Content = newReportPost.Content,
+                    CreatedDate = DateTime.UtcNow,
+                    ImageUrl = ImageUrl,
+                    //ReadCount = 0,
+                    CategoryId = newReportPost.CategoryId,
+                    UserId = _userManager.GetUserId(User),
+                    HazardTypeId = newReportPost.HazardTypeId,
+                    //ReportStatusId = newReportPost.ReportStatusId,
+                    ReportStatusId = 1,
+                    Location = newReportPost.Location
 
-                    };
+                };
 
                 _reportRepository.CreateReportPost(reportPost);
 

@@ -22,6 +22,7 @@ builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireCo
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
+builder.Services.AddScoped<IInvestigationRepository, InvestigationRepository>();
 
 // Bind configuration to AuthMessageSenderOptions
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration.GetSection("Email:Smtp"));

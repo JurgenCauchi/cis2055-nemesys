@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nemesys.Data;
 
@@ -11,9 +12,11 @@ using Nemesys.Data;
 namespace Nemesys.Migrations
 {
     [DbContext(typeof(NemesysContext))]
-    partial class NemesysContextModelSnapshot : ModelSnapshot
+    [Migration("20250505134200_Investigations")]
+    partial class Investigations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -267,7 +270,7 @@ namespace Nemesys.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -301,7 +304,7 @@ namespace Nemesys.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HazardTypes", (string)null);
+                    b.ToTable("HazardTypes");
 
                     b.HasData(
                         new
@@ -324,56 +327,6 @@ namespace Nemesys.Migrations
                             Id = 4,
                             Name = "Unsafe Structure"
                         });
-                });
-
-            modelBuilder.Entity("Nemesys.Models.Investigation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("HazardTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReportId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReportStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("HazardTypeId");
-
-                    b.HasIndex("ReportStatusId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Investigations", (string)null);
                 });
 
             modelBuilder.Entity("Nemesys.Models.ReportPost", b =>
@@ -428,7 +381,7 @@ namespace Nemesys.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ReportPosts", (string)null);
+                    b.ToTable("ReportPosts");
                 });
 
             modelBuilder.Entity("Nemesys.Models.ReportStatus", b =>
@@ -445,7 +398,7 @@ namespace Nemesys.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ReportStatuses", (string)null);
+                    b.ToTable("ReportStatuses");
 
                     b.HasData(
                         new
@@ -481,7 +434,7 @@ namespace Nemesys.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AuthorViewModel", (string)null);
+                    b.ToTable("AuthorViewModel");
                 });
 
             modelBuilder.Entity("Nemesys.Models.ViewModels.CategoryViewModel", b =>
@@ -498,24 +451,7 @@ namespace Nemesys.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CategoryViewModel", (string)null);
-                });
-
-            modelBuilder.Entity("Nemesys.Models.ViewModels.HazardTypeViewModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("HazardTypeViewModel", (string)null);
+                    b.ToTable("CategoryViewModel");
                 });
 
             modelBuilder.Entity("Nemesys.Models.ViewModels.InvestigationViewModel", b =>
@@ -528,6 +464,9 @@ namespace Nemesys.Migrations
 
                     b.Property<string>("AuthorId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -550,73 +489,11 @@ namespace Nemesys.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.HasIndex("ReportStatusId");
-
-                    b.ToTable("InvestigationViewModel", (string)null);
-                });
-
-            modelBuilder.Entity("Nemesys.Models.ViewModels.ReportPostViewModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AuthorId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("HasUpvoted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("HazardTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LoggedInUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReadCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReportStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UpvoteCount")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("HazardTypeId");
-
                     b.HasIndex("ReportStatusId");
 
-                    b.ToTable("ReportPostViewModel", (string)null);
+                    b.ToTable("InvestigationViewModel");
                 });
 
             modelBuilder.Entity("Nemesys.Models.ViewModels.ReportStatusViewModel", b =>
@@ -633,7 +510,7 @@ namespace Nemesys.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ReportStatusViewModel", (string)null);
+                    b.ToTable("ReportStatusViewModel");
                 });
 
             modelBuilder.Entity("ReportUpvote", b =>
@@ -658,7 +535,7 @@ namespace Nemesys.Migrations
                     b.HasIndex("ReportPostId", "UserId")
                         .IsUnique();
 
-                    b.ToTable("ReportUpvotes", (string)null);
+                    b.ToTable("ReportUpvotes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -712,41 +589,16 @@ namespace Nemesys.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Nemesys.Models.Investigation", b =>
-                {
-                    b.HasOne("Nemesys.Models.Category", null)
-                        .WithMany("ReportPosts")
-                        .HasForeignKey("CategoryId");
-
-                    b.HasOne("Nemesys.Models.HazardType", null)
-                        .WithMany("ReportPosts")
-                        .HasForeignKey("HazardTypeId");
-
-                    b.HasOne("Nemesys.Models.ReportStatus", "ReportStatus")
-                        .WithMany()
-                        .HasForeignKey("ReportStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Nemesys.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("ReportStatus");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Nemesys.Models.ReportPost", b =>
                 {
                     b.HasOne("Nemesys.Models.Category", "Category")
-                        .WithMany()
+                        .WithMany("ReportPosts")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Nemesys.Models.HazardType", "Hazard")
-                        .WithMany()
+                        .WithMany("ReportPosts")
                         .HasForeignKey("HazardTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -776,32 +628,9 @@ namespace Nemesys.Migrations
                         .WithMany()
                         .HasForeignKey("AuthorId");
 
-                    b.HasOne("Nemesys.Models.ViewModels.ReportStatusViewModel", "ReportStatus")
-                        .WithMany()
-                        .HasForeignKey("ReportStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-
-                    b.Navigation("ReportStatus");
-                });
-
-            modelBuilder.Entity("Nemesys.Models.ViewModels.ReportPostViewModel", b =>
-                {
-                    b.HasOne("Nemesys.Models.ViewModels.AuthorViewModel", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
-
                     b.HasOne("Nemesys.Models.ViewModels.CategoryViewModel", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Nemesys.Models.ViewModels.HazardTypeViewModel", "HazardType")
-                        .WithMany()
-                        .HasForeignKey("HazardTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -814,8 +643,6 @@ namespace Nemesys.Migrations
                     b.Navigation("Author");
 
                     b.Navigation("Category");
-
-                    b.Navigation("HazardType");
 
                     b.Navigation("ReportStatus");
                 });

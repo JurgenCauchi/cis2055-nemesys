@@ -1,0 +1,49 @@
+﻿@using Nemesys.Models.ViewModels
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> UserManager
+@model Nemesys.Models.ViewModels.InvestigationViewModel
+
+
+@{
+    ViewData["Title"] = Model.Id;
+    var currentUser = await UserManager.GetUserAsync(User);
+}
+
+
+<a asp-controller="Investigation" asp-action="Index" class="btn btn-outline-secondary">Back to list</a>
+
+
+<div class="card" style="width: 90%; padding:20px; margin:20px;">
+    <div class="card-body">
+        <h3 class="card-title">Investigation for: @Model.Report.Title</h3>
+        <p class="card-text">@Model.Description</p>
+        <p class="small">Status: @Model.ReportStatus.Name</p>
+        <p class="small">Reported on: @Model.CreatedDate.ToShortDateString()</p>
+        <p class="small">Reported by: @Model.Author.Name</p>
+        <div style="margin-bottom: 20px;">
+            <div id="post-map" style="height: 400px; margin-bottom: 10px;"></div>
+        </div>
+    </div>
+</div>
+
+<a asp-controller="Investigation" asp-action="Index" class="btn btn-primary">Back to list</a>
+
+@if (User.Identity.IsAuthenticated)
+{
+    if (Model.LoggedInUserId == Model.Author.Id && currentUser?.Role == "Investigator")
+    {
+        <form asp-controller="Investigation" asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-danger" onclick="return confirm('You sure you wanna delete this Investigation?');">Delete</button>
+        </form>
+    }
+}
+
+
+@if (User.Identity.IsAuthenticated)
+{
+    if (Model.LoggedInUserId == Model.Author.Id &&  currentUser?.Role == "Investigator")
+    {
+        <a asp-controller="Investigation" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Edit</a>
+    }
+}
+

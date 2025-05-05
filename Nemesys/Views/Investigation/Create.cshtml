@@ -1,0 +1,45 @@
+﻿@using Nemesys.Models.ViewModels
+@model EditInvestigationViewModel
+
+@{
+    ViewData["Title"] = "Create Investigation";
+}
+
+
+<h2>Create Investigation</h2>
+
+<form asp-action="Create" method="post" role="form" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="ReportId" class="col-md-2">Select Report</label>
+        <div class="col-md-5">
+            <select asp-for="ReportId" class="form-control" asp-items="Model.AvailableReports">
+                <option value="">-- Select a Report --</option>
+            </select>
+            <span asp-validation-for="ReportId" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="ReportStatusId" class="col-md-2"></label>
+        <div class="col-md-5">
+            <select asp-for="ReportStatusId"
+                    asp-items="@(new SelectList(Model.ReportStatusList,"Id","Name"))">
+            </select>
+        </div>
+        <span asp-validation-for="ReportStatusId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description" class="col-md-2"></label>
+        <div class="col-md-5">
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-5">
+            <input type="submit" class="btn btn-primary" value="Create Investigation" style="margin-top:0.5rem" />
+        </div>
+    </div>
+</form>
+

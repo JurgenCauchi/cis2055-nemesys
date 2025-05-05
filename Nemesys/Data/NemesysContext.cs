@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Nemesys.Models;
+using Nemesys.Models.ViewModels;
 
 namespace Nemesys.Data
 {
@@ -112,9 +113,12 @@ namespace Nemesys.Data
 
         // DbSet properties should be public and virtual
         public  DbSet<ReportPost> ReportPosts { get; set; }
+        public DbSet<Investigation> Investigations { get; set; }
         public  DbSet<Category> Categories { get; set; } 
         public DbSet<HazardType> HazardTypes { get; set; }    
         public DbSet<ReportStatus> ReportStatuses { get; set; } 
-        public DbSet<ReportUpvote> ReportUpvotes { get; set; }  
+        public DbSet<ReportUpvote> ReportUpvotes { get; set; }
+        public DbSet<Nemesys.Models.ViewModels.ReportPostViewModel> ReportPostViewModel { get; set; } = default!;
+        public DbSet<Nemesys.Models.ViewModels.InvestigationViewModel> InvestigationViewModel { get; set; } = default!;
     }
 }

@@ -1,5 +1,9 @@
 ﻿@inject SignInManager<AppUser> SignInManager
-
+@inject UserManager<AppUser> UserManager
+ @{
+        var currentUser = await UserManager.GetUserAsync(User);
+ 
+ }
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,12 +16,12 @@
     <link rel="stylesheet" href="~/Nemesys.styles.css" asp-append-version="true" />
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
-          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-          crossorigin="" />
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin="" />
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""></script>
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
 
 </head>
 <body>
@@ -49,6 +53,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="HallOfFame" asp-action="Index">Hall of Fame</a>
                         </li>
+                        @if (currentUser?.Role == "Investigator")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Investigation" asp-action="Index">Investigations</a>
+                            </li
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Investigation" asp-action="Create">Add Investigations</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

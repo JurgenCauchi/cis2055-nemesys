@@ -25,9 +25,13 @@
                 <form asp-controller="ReportPosts" asp-action="ToggleUpvote" method="post">
                     <input type="hidden" name="reportPostId" value="@Report.Id" />
                     <input type="hidden" name="returnUrl" value="@Url.Action("Index", "ReportPosts")" />
+                    <br>
                     @if (SignInManager.IsSignedIn(User))
                     {
+                        
                         <button type="submit" class="btn btn-sm btn-outline-primary" onclick="handleUpvote(@Report.Id)">
+                            
+
                             👍 <span class="upvote-count">@Report.UpvoteCount</span>
                         </button>
                     }

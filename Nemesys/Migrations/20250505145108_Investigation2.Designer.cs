@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nemesys.Data;
 
@@ -11,9 +12,11 @@ using Nemesys.Data;
 namespace Nemesys.Migrations
 {
     [DbContext(typeof(NemesysContext))]
-    partial class NemesysContextModelSnapshot : ModelSnapshot
+    [Migration("20250505145108_Investigation2")]
+    partial class Investigation2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -267,7 +270,7 @@ namespace Nemesys.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -301,7 +304,7 @@ namespace Nemesys.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HazardTypes", (string)null);
+                    b.ToTable("HazardTypes");
 
                     b.HasData(
                         new
@@ -347,15 +350,11 @@ namespace Nemesys.Migrations
                     b.Property<int?>("HazardTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ReportId")
+                    b.Property<int>("RepId")
                         .HasColumnType("int");
 
                     b.Property<int>("ReportStatusId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -373,7 +372,7 @@ namespace Nemesys.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Investigations", (string)null);
+                    b.ToTable("Investigations");
                 });
 
             modelBuilder.Entity("Nemesys.Models.ReportPost", b =>
@@ -428,7 +427,7 @@ namespace Nemesys.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ReportPosts", (string)null);
+                    b.ToTable("ReportPosts");
                 });
 
             modelBuilder.Entity("Nemesys.Models.ReportStatus", b =>
@@ -445,7 +444,7 @@ namespace Nemesys.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ReportStatuses", (string)null);
+                    b.ToTable("ReportStatuses");
 
                     b.HasData(
                         new
@@ -481,7 +480,7 @@ namespace Nemesys.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AuthorViewModel", (string)null);
+                    b.ToTable("AuthorViewModel");
                 });
 
             modelBuilder.Entity("Nemesys.Models.ViewModels.CategoryViewModel", b =>
@@ -498,7 +497,7 @@ namespace Nemesys.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CategoryViewModel", (string)null);
+                    b.ToTable("CategoryViewModel");
                 });
 
             modelBuilder.Entity("Nemesys.Models.ViewModels.HazardTypeViewModel", b =>
@@ -515,7 +514,7 @@ namespace Nemesys.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HazardTypeViewModel", (string)null);
+                    b.ToTable("HazardTypeViewModel");
                 });
 
             modelBuilder.Entity("Nemesys.Models.ViewModels.InvestigationViewModel", b =>
@@ -552,7 +551,7 @@ namespace Nemesys.Migrations
 
                     b.HasIndex("ReportStatusId");
 
-                    b.ToTable("InvestigationViewModel", (string)null);
+                    b.ToTable("InvestigationViewModel");
                 });
 
             modelBuilder.Entity("Nemesys.Models.ViewModels.ReportPostViewModel", b =>
@@ -616,7 +615,7 @@ namespace Nemesys.Migrations
 
                     b.HasIndex("ReportStatusId");
 
-                    b.ToTable("ReportPostViewModel", (string)null);
+                    b.ToTable("ReportPostViewModel");
                 });
 
             modelBuilder.Entity("Nemesys.Models.ViewModels.ReportStatusViewModel", b =>
@@ -633,7 +632,7 @@ namespace Nemesys.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ReportStatusViewModel", (string)null);
+                    b.ToTable("ReportStatusViewModel");
                 });
 
             modelBuilder.Entity("ReportUpvote", b =>
@@ -658,7 +657,7 @@ namespace Nemesys.Migrations
                     b.HasIndex("ReportPostId", "UserId")
                         .IsUnique();
 
-                    b.ToTable("ReportUpvotes", (string)null);
+                    b.ToTable("ReportUpvotes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -723,7 +722,7 @@ namespace Nemesys.Migrations
                         .HasForeignKey("HazardTypeId");
 
                     b.HasOne("Nemesys.Models.ReportStatus", "ReportStatus")
-                        .WithMany()
+                        .WithMany("ReportPosts")
                         .HasForeignKey("ReportStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -752,7 +751,7 @@ namespace Nemesys.Migrations
                         .IsRequired();
 
                     b.HasOne("Nemesys.Models.ReportStatus", "ReportStatus")
-                        .WithMany("ReportPosts")
+                        .WithMany()
                         .HasForeignKey("ReportStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
