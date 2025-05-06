@@ -11,9 +11,7 @@
         public string Location { get; set; }
 
         //Foreign Key - navigation property (name + key as the  property name)
-        public int CategoryId { get; set; }
-        //Reference navigation property
-        public Category Category { get; set; }
+
         //public int ReadCount { get; set; }
 
         public int ReportStatusId { get; set; }

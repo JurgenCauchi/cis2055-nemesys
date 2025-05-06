@@ -41,8 +41,7 @@
     <img class="card-img-top" src="@Model.ImageUrl" alt="Image for @Model.Title" />
     <div class="card-body">
         <h3 class="card-title">@Model.Title</h3>
-        <p class="card-text">@Model.Description</p>
-        <p class="small">Category: @Model.Category.Name</p>
+        <p class="card-text">@Model.Content</p>
         <p class="small">Hazard Type: @Model.HazardType.Name</p>
         <p class="small">Status: @Model.ReportStatus.Name</p>
         <p class="small">Reported on: @Model.CreatedDate.ToShortDateString()</p>

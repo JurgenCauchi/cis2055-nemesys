@@ -12,14 +12,8 @@ namespace Nemesys.Models.ViewModels
         [Display(Name = "Blog heading")]
 
         public string Title { get; set; }
-        [Display(Name = "Blog Post Category")]
-        [Required(ErrorMessage = "Category is required")]
-
-        public int CategoryId { get; set; }
-        //Property used solely to populate drop down
-        public List<CategoryViewModel>? CategoryList { get; set; }
-        [Required(ErrorMessage = "Blog post content is required")]
-        [StringLength(1500, ErrorMessage = "Blog post cannot be longer than 1500 characters")]
+        [Display(Name = "Content")]
+        [Required(ErrorMessage = "Content is required")]
 
         public string Content { get; set; }
         public string? ImageUrl { get; set; } //Used to prepare the edit page

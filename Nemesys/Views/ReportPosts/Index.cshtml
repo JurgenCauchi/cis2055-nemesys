@@ -18,7 +18,7 @@
             }
             <div class="card-body">
                 <h3 class="card-title">@Report.Title</h3>
-                <p class="small">@Report.CreatedDate.ToShortDateString() in @Report.Category.Name by @Report.Author.Name</p>
+                <p class="small">@Report.CreatedDate.ToShortDateString() by @Report.Author.Name</p>
 
                 <a asp-controller="ReportPosts" asp-action="Details" asp-route-id="@Report.Id" class="btn btn-primary">Details</a>
 

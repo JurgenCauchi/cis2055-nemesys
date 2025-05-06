@@ -25,7 +25,6 @@ namespace Nemesys.Repositories
         public IEnumerable<ReportPost> GetAllReportPosts()
         {
             return _appDbContext.ReportPosts
-                .Include(x => x.Category)
                 .Include(x => x.User)
                 .Include(x => x.Hazard)
                 .Include(x => x.ReportStatus)
@@ -40,20 +39,12 @@ namespace Nemesys.Repositories
         public ReportPost GetReportPostById(int reportPostId)
         {
             return _appDbContext.ReportPosts
-                .Include(x => x.Category)
                 .Include(x => x.User)
                 .Include(x => x.Hazard)
                 .Include(x => x.ReportStatus)
                 .FirstOrDefault(p => p.Id == reportPostId);
         }
 
-
-        public Category GetCategoryById(int categoryId)
-        {
-            //Not loading related blog posts
-            return _appDbContext.Categories.FirstOrDefault(c => c.Id == categoryId);
-
-        }
 
         public IEnumerable<HazardType> GetAllHazardTypes()
         {
@@ -123,7 +114,6 @@ namespace Nemesys.Repositories
                 existingBlogPost.Content = updatedReportPost.Content;
                 existingBlogPost.UpdatedDate = updatedReportPost.UpdatedDate;
                 existingBlogPost.ImageUrl = updatedReportPost.ImageUrl;
-                existingBlogPost.CategoryId = updatedReportPost.CategoryId;
                 existingBlogPost.HazardTypeId = updatedReportPost.HazardTypeId;
                 existingBlogPost.ReportStatus = updatedReportPost.ReportStatus;
                 existingBlogPost.Location = updatedReportPost.Location;

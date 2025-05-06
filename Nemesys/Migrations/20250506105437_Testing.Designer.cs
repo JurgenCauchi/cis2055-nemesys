@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nemesys.Data;
 
@@ -11,9 +12,11 @@ using Nemesys.Data;
 namespace Nemesys.Migrations
 {
     [DbContext(typeof(NemesysContext))]
-    partial class NemesysContextModelSnapshot : ModelSnapshot
+    [Migration("20250506105437_Testing")]
+    partial class Testing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -268,6 +271,23 @@ namespace Nemesys.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Uncategorised"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Comedy"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "News"
+                        });
                 });
 
             modelBuilder.Entity("Nemesys.Models.HazardType", b =>
@@ -317,7 +337,7 @@ namespace Nemesys.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
@@ -327,7 +347,7 @@ namespace Nemesys.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("HazardTypeId")
+                    b.Property<int?>("HazardTypeId")
                         .HasColumnType("int");
 
                     b.Property<int>("ReportId")
@@ -365,6 +385,9 @@ namespace Nemesys.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -397,6 +420,8 @@ namespace Nemesys.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("HazardTypeId");
 
@@ -458,6 +483,23 @@ namespace Nemesys.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AuthorViewModel");
+                });
+
+            modelBuilder.Entity("Nemesys.Models.ViewModels.CategoryViewModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CategoryViewModel");
                 });
 
             modelBuilder.Entity("Nemesys.Models.ViewModels.HazardTypeViewModel", b =>
@@ -527,6 +569,9 @@ namespace Nemesys.Migrations
                     b.Property<string>("AuthorId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -567,6 +612,8 @@ namespace Nemesys.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("HazardTypeId");
 
@@ -672,15 +719,11 @@ namespace Nemesys.Migrations
                 {
                     b.HasOne("Nemesys.Models.Category", null)
                         .WithMany("ReportPosts")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryId");
 
                     b.HasOne("Nemesys.Models.HazardType", null)
                         .WithMany("ReportPosts")
-                        .HasForeignKey("HazardTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("HazardTypeId");
 
                     b.HasOne("Nemesys.Models.ReportPost", "Report")
                         .WithMany()
@@ -707,6 +750,12 @@ namespace Nemesys.Migrations
 
             modelBuilder.Entity("Nemesys.Models.ReportPost", b =>
                 {
+                    b.HasOne("Nemesys.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Nemesys.Models.HazardType", "Hazard")
                         .WithMany()
                         .HasForeignKey("HazardTypeId")
@@ -722,6 +771,8 @@ namespace Nemesys.Migrations
                     b.HasOne("Nemesys.Models.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Category");
 
                     b.Navigation("Hazard");
 
@@ -761,6 +812,12 @@ namespace Nemesys.Migrations
                         .WithMany()
                         .HasForeignKey("AuthorId");
 
+                    b.HasOne("Nemesys.Models.ViewModels.CategoryViewModel", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Nemesys.Models.ViewModels.HazardTypeViewModel", "HazardType")
                         .WithMany()
                         .HasForeignKey("HazardTypeId")
@@ -774,6 +831,8 @@ namespace Nemesys.Migrations
                         .IsRequired();
 
                     b.Navigation("Author");
+
+                    b.Navigation("Category");
 
                     b.Navigation("HazardType");
 

@@ -16,5 +16,9 @@
 
         public string? UserId { get; set; }
         public AppUser User { get; set; }
+
+        public int? CategoryId { get; set; }
+
+        public int? HazardTypeId { get; set; }
     }
 }

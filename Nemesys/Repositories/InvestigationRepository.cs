@@ -45,23 +45,11 @@ namespace Nemesys.Repositories
         }
 
 
-        public Category GetCategoryById(int categoryId)
-        {
-            //Not loading related blog posts
-            return _appDbContext.Categories.FirstOrDefault(c => c.Id == categoryId);
-
-        }
-
         public IEnumerable<HazardType> GetAllHazardTypes()
         {
             return _appDbContext.HazardTypes;
         }
 
-        public HazardType GetHazardById(int hazardId)
-        {
-            //Not loading related blog posts
-            return _appDbContext.HazardTypes.FirstOrDefault(c => c.Id == hazardId);
-        }
 
         public IEnumerable<ReportStatus> GetAllReportStatuses()
         {

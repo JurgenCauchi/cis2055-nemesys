@@ -43,26 +43,7 @@ namespace Nemesys.Data
 
             modelBuilder.Entity<AppUser>().HasData(user);
 
-            modelBuilder.Entity<Category>().HasData(
-                new Category()
-                {
-                    Id = 1,
-                    Name = "Uncategorised"
-                },
-                new Category()
-                {
-                    Id = 2,
-                    Name = "Comedy"
-                },
-                new Category()
-                {
-                    Id = 3,
-                    Name = "News"
-                }
-            );
-
-
-            modelBuilder.Entity<HazardType>().HasData(
+             modelBuilder.Entity<HazardType>().HasData(
                 new HazardType()
                 {
                     Id = 1,
