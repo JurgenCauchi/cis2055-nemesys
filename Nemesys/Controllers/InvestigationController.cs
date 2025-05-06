@@ -4,6 +4,7 @@ using System.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,9 +20,11 @@ namespace Nemesys.Controllers
     {
         private readonly NemesysContext _context;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IEmailSender _emailSender;
         private IInvestigationRepository _investigationRepository { get; set; }
-        public InvestigationController(NemesysContext context, IInvestigationRepository investigationRepository, UserManager<AppUser> userManager)
+        public InvestigationController(NemesysContext context, IInvestigationRepository investigationRepository, UserManager<AppUser> userManager, IEmailSender emailSender)
         {
+            _emailSender = emailSender;
             _context = context;
             _userManager = userManager;
             _investigationRepository = investigationRepository ?? throw new ArgumentNullException(nameof(investigationRepository));
@@ -141,7 +144,8 @@ namespace Nemesys.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("ReportId, Description, ReportStatusId,Title")] EditInvestigationViewModel newInvestigation)
+
+        public async Task<IActionResult> Create([Bind("ReportId, Description, ReportStatusId,Title")] EditInvestigationViewModel newInvestigation)
         {
             if (ModelState.IsValid)
             {
@@ -154,31 +158,44 @@ namespace Nemesys.Controllers
                     UserId = _userManager.GetUserId(User),
                 };
 
-                // Add the investigation to the context
                 _context.Investigations.Add(investigation);
 
-                // Update linked ReportPost status
-                var report = _context.ReportPosts.FirstOrDefault(r => r.Id == newInvestigation.ReportId);
+                var report = _context.ReportPosts
+                    .Include(r => r.User) // Make sure to include the User
+                    .FirstOrDefault(r => r.Id == newInvestigation.ReportId);
+
                 if (report != null)
                 {
                     report.ReportStatusId = newInvestigation.ReportStatusId;
                     report.UpdatedDate = DateTime.UtcNow;
+
+                    // Send email notification
+                    if (report.User != null && !string.IsNullOrEmpty(report.User.Email))
+                    {
+                        var subject = $"Investigation created for your report: {report.Title}";
+                        var message = $@"
+                        <p>Hello,</p>
+                        <p>An investigation has been created for your report (#{report.Id} - {report.Title}).</p>
+                        <p>Investigation details:</p>
+                        <p>{newInvestigation.Description}</p>
+                        <p>Status: {_context.ReportStatuses.FirstOrDefault(s => s.Id == newInvestigation.ReportStatusId)?.Name}</p>
+                        <p>Thank you,</p>
+                        <p>The Support Team</p>";
+
+                        await _emailSender.SendEmailAsync(report.User.Email, subject, message);
+                    }
                 }
 
-                // Save everything in one go
                 _context.SaveChanges();
-
-
                 return RedirectToAction("Index");
             }
             else
             {
-                // RE-POPULATE DROPDOWN
                 newInvestigation.AvailableReports = _context.ReportPosts
                     .Select(r => new SelectListItem
                     {
                         Value = r.Id.ToString(),
-                        Text = $"Report #{r.Id} - {r.Title}" // or any display
+                        Text = $"Report #{r.Id} - {r.Title}"
                     }).ToList();
 
                 return View(newInvestigation);
@@ -220,7 +237,7 @@ namespace Nemesys.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(EditInvestigationViewModel updatedInvestigation)
+        public async Task<IActionResult> Edit(EditInvestigationViewModel updatedInvestigation)
         {
             if (updatedInvestigation.ReportStatusId == 0)
             {
@@ -229,7 +246,6 @@ namespace Nemesys.Controllers
 
             if (!ModelState.IsValid)
             {
-                // Repopulate dropdown list if returning to view
                 updatedInvestigation.ReportStatusList = _investigationRepository.GetAllReportStatuses()
                     .Select(s => new ReportStatusViewModel { Id = s.Id, Name = s.Name })
                     .ToList();
@@ -240,16 +256,46 @@ namespace Nemesys.Controllers
 
             if (investigationToUpdate != null && investigationToUpdate.UserId == _userManager.GetUserId(User))
             {
-                // Update investigation
+                // Store old values for comparison
+                var oldStatusId = investigationToUpdate.ReportStatusId;
+                var oldDescription = investigationToUpdate.Description;
+
                 investigationToUpdate.Description = updatedInvestigation.Description;
                 investigationToUpdate.UpdatedDate = DateTime.UtcNow;
                 investigationToUpdate.ReportStatusId = updatedInvestigation.ReportStatusId;
 
-                // Update linked report status if it exists
                 if (investigationToUpdate.Report != null)
                 {
                     investigationToUpdate.Report.ReportStatusId = updatedInvestigation.ReportStatusId;
                     investigationToUpdate.Report.UpdatedDate = DateTime.UtcNow;
+
+                    // Check if status or description changed
+                    if (oldStatusId != updatedInvestigation.ReportStatusId ||
+                        oldDescription != updatedInvestigation.Description)
+                    {
+                        // Get report with author info
+                        var report = _context.ReportPosts
+                            .Include(r => r.User)
+                            .FirstOrDefault(r => r.Id == investigationToUpdate.ReportId);
+
+                        if (report?.User != null && !string.IsNullOrEmpty(report.User.Email))
+                        {
+                            var statusName = _context.ReportStatuses
+                                .FirstOrDefault(s => s.Id == updatedInvestigation.ReportStatusId)?.Name;
+
+                            var subject = $"Investigation updated for your report: {report.Title}";
+                            var message = $@"
+                            <p>Hello,</p>
+                            <p>The investigation for your report (#{report.Id} - {report.Title}) has been updated.</p>
+                            <p>New investigation details:</p>
+                            <p>{updatedInvestigation.Description}</p>
+                            <p>Status: {statusName}</p>
+                            <p>Thank you,</p>
+                            <p>The Support Team</p>";
+
+                            await _emailSender.SendEmailAsync(report.User.Email, subject, message);
+                        }
+                    }
                 }
 
                 try
@@ -260,12 +306,12 @@ namespace Nemesys.Controllers
                 catch (DbUpdateException ex)
                 {
                     ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
-                    // Log the error (ex)
                 }
             }
 
             return View(updatedInvestigation);
         }
+
         // GET: InvestigationViewModels/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]

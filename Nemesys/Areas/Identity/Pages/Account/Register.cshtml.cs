@@ -134,12 +134,13 @@ namespace Nemesys.Areas.Identity.Pages.Account
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebUtility.UrlEncode(code);
-                    var callbackUrl = Url.Action(
-                        "ConfirmEmail",
-                        "Account",
-                        new { userId = userId, code = code, returnUrl = returnUrl },
+                    var encodedCode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    var callbackUrl = Url.Page(
+                        "/Account/ConfirmEmail",
+                        pageHandler: null,
+                        values: new { userId = userId, code = encodedCode },
                         protocol: Request.Scheme);
+
 
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
