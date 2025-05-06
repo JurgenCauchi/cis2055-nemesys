@@ -9,7 +9,7 @@ namespace Nemesys.Models.ViewModels
         public int Id { get; set; }
         [Required(ErrorMessage = "A title is required")]
         [StringLength(50)]
-        [Display(Name = "Blog heading")]
+        [Display(Name = "Title")]
 
         public string Title { get; set; }
         [Display(Name = "Content")]

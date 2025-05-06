@@ -1,8 +1,29 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <div class="text-center">
+        <h1 class="display-4 mb-3">Campus Near Miss Reporting</h1>
+        <p class="lead">Help make our campus safer by reporting near miss accidents and hazards.</p>
+        <a class="btn btn-primary btn-lg mt-3" asp-controller="ReportPosts" asp-action="Create">Report a Near Miss</a>
+    </div>
+
+    <hr class="my-5" />
+
+    <div class="row text-center">
+        <div class="col-md-4">
+            <h3>What is a Near Miss?</h3>
+            <p>A near miss is an unplanned event that did not result in injury or damage, but had the potential to do so.</p>
+        </div>
+        <div class="col-md-4">
+            <h3>Why Report?</h3>
+            <p>Reporting near misses helps us identify risk areas and prevent future incidents.</p>
+        </div>
+        <div class="col-md-4">
+            <h3>Stay Safe</h3>
+            <p>View reported near misses around campus to stay informed and aware.</p>
+            <a class="btn btn-outline-secondary btn-sm mt-2" asp-controller="ReportPosts" asp-action="Index">View Reports</a>
+        </div>
+    </div>
 </div>

@@ -3,11 +3,11 @@
 @model ReportPostListViewModel
 @inject SignInManager<AppUser> SignInManager
 @{
-    ViewData["Title"] = "Report Posts";
+    ViewData["Title"] = "Reports";
 }
 <h1>@ViewData["Title"]</h1>
 
-<h2>Showing @Model.TotalEntries blog entries</h2>
+<h2>Showing @Model.TotalEntries Reports</h2>
 <div class="row">
     @foreach (var Report in Model.ReportPosts)
     {

@@ -38,7 +38,11 @@
 <h1>@Model.Title</h1>
 
 <div class="card" style="width: 90%; padding:20px; margin:20px;">
-    <img class="card-img-top" src="@Model.ImageUrl" alt="Image for @Model.Title" />
+
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <img class="card-img-top" src="@Model.ImageUrl" alt="Image for @Model.Title" />
+    }
     <div class="card-body">
         <h3 class="card-title">@Model.Title</h3>
         <p class="card-text">@Model.Content</p>
