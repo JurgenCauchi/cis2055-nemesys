@@ -149,14 +149,26 @@ namespace Nemesys.Controllers
                 {
                     ReportId = newInvestigation.ReportId,
                     Description = newInvestigation.Description,
-                    Report = newInvestigation.Report,
                     CreatedDate = DateTime.UtcNow,
                     ReportStatusId = newInvestigation.ReportStatusId,
                     UserId = _userManager.GetUserId(User),
-                    
                 };
 
-                _investigationRepository.CreateInvestigation(investigation);
+                // Add the investigation to the context
+                _context.Investigations.Add(investigation);
+
+                // Update linked ReportPost status
+                var report = _context.ReportPosts.FirstOrDefault(r => r.Id == newInvestigation.ReportId);
+                if (report != null)
+                {
+                    report.ReportStatusId = newInvestigation.ReportStatusId;
+                    report.UpdatedDate = DateTime.UtcNow;
+                }
+
+                // Save everything in one go
+                _context.SaveChanges();
+
+
                 return RedirectToAction("Index");
             }
             else

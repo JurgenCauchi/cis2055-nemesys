@@ -13,6 +13,10 @@ namespace Nemesys.Data
         {
         }
 
+        public NemesysContext()
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
