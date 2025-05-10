@@ -16,13 +16,10 @@
 <div class="card" style="width: 90%; padding:20px; margin:20px;">
     <div class="card-body">
         <h3 class="card-title">Investigation for: @Model.Report.Title</h3>
-        <p class="card-text">@Model.Description</p>
+        <p class="card-text">Description: @Model.Description</p>
         <p class="small">Status: @Model.ReportStatus.Name</p>
         <p class="small">Reported on: @Model.CreatedDate.ToShortDateString()</p>
         <p class="small">Reported by: @Model.Author.Name</p>
-        <div style="margin-bottom: 20px;">
-            <div id="post-map" style="height: 400px; margin-bottom: 10px;"></div>
-        </div>
     </div>
 </div>
 

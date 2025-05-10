@@ -71,8 +71,10 @@ namespace Nemesys.Controllers
         {
             var investigation = _context.Investigations
                 .Include(i => i.Report)
-                .Include(i => i.ReportStatus) // Ensure ReportStatus is loaded with the Investigation
+                    .ThenInclude(r => r.User)
+                .Include(i => i.ReportStatus)
                 .FirstOrDefault(i => i.Id == id);
+
 
             if (investigation == null)
                 return NotFound();
@@ -92,8 +94,8 @@ namespace Nemesys.Controllers
                 },
                 Author = new AuthorViewModel()
                 {
-                    Id = investigation.UserId,
-                    Name = investigation.User != null ? investigation.User.UserName : "Anonymous"
+                    Id = investigation.Report.UserId,
+                    Name = investigation.Report.User != null ? investigation.User.UserName : "Anonymous"
                 },
                 LoggedInUserId = userId
             };

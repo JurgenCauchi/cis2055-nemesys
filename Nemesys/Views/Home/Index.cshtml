@@ -1,4 +1,5 @@
-﻿@{
+﻿@inject SignInManager<AppUser> SignInManager
+@{
     ViewData["Title"] = "Home";
 }
 
@@ -6,7 +7,17 @@
     <div class="text-center">
         <h1 class="display-4 mb-3">Campus Near Miss Reporting</h1>
         <p class="lead">Help make our campus safer by reporting near miss accidents and hazards.</p>
-        <a class="btn btn-primary btn-lg mt-3" asp-controller="ReportPosts" asp-action="Create">Report a Near Miss</a>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a class="btn btn-primary btn-lg mt-3" asp-controller="ReportPosts" asp-action="Create">Report a Near Miss</a>
+            
+           
+        }
+        else
+        {
+            <a class="btn btn-primary btn-lg mt-3" id="register" asp-area="Identity" asp-page="/Account/Register">Report a Near Miss</a>
+        }
+        
     </div>
 
     <hr class="my-5" />
